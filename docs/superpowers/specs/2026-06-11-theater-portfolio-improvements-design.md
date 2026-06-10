@@ -40,8 +40,9 @@ A new component `src/components/theater/ScreenPanel.tsx` renders inside the Thre
 
 **Positioning:**
 - Mounted at world position `[0, 5.5, -15.6]` — 0.2 units in front of the screen mesh (which sits at z = -15.8)
-- `distanceFactor={10}` on `<Html>` keeps content legible across all shot distances
+- `distanceFactor={10}` on `<Html>` keeps content legible across all shot distances — this value will need runtime tuning; start at 10 and adjust until text is comfortably readable at the closest shot (`projects` at z = -2) without being oversized at the furthest (`lobby` at z = 10)
 - Base pixel size: `860px × 460px`
+- Do **not** use the `occlude` prop — the screen is at the far end of the theater and geometry between the camera and screen (seats, booth) would incorrectly hide the content
 
 **Layering:**
 - The screen mesh's existing `CanvasTexture` remains as the atmospheric background (grain, vignette, letterbox bars, section-tinted radial gradient)
@@ -129,8 +130,8 @@ The four panel components are adapted to render inside the `ScreenPanel` Html ov
 - Layout otherwise unchanged
 
 ### `SkillsPanel`
-- Currently not in codebase — styled from scratch to match the screen aesthetic
-- Grid of skill categories with color-coded headers, same palette as `AboutPanel`'s skill groups
+- Exists at `src/components/panels/SkillsPanel.tsx` — uses `TechStack` component and certifications list
+- Minor size tweaks only (heading `22px → 18px`) to fit screen proportions; layout unchanged
 
 ### `ProjectPanel`
 - List view: project cards gain a left-side colored accent bar (gold for featured, purple for others)
@@ -138,7 +139,8 @@ The four panel components are adapted to render inside the `ScreenPanel` Html ov
 - Detail view: unchanged structurally
 
 ### `ContactPanel`
-- Currently not visible in codebase — styled to match
+- Exists at `src/components/panels/ContactPanel.tsx` — contact form with name/email/message/submit
+- No structural changes; already compact enough for the screen dimensions
 
 ### Section transitions
 - On `activeSection` change: current panel content exits (`opacity 0`, 200ms), new content enters (`opacity 1`, 220ms)
