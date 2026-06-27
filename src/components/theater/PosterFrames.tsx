@@ -54,8 +54,8 @@ function PosterFrame({ project, index, x, z, rotY, texture }: FrameProps) {
     window.addEventListener('trailer-flare', onFlare)
     return () => window.removeEventListener('trailer-flare', onFlare)
   }, [index])
-  const setSection = useTheaterStore(s => s.setSection)
-  const setProject = useTheaterStore(s => s.setProject)
+  const setPendingProject = useTheaterStore(s => s.setPendingProject)
+  const setMode = useTheaterStore(s => s.setMode)
   const isTransitioning = useTheaterStore(s => s.isTransitioning)
   const setHoveredZone = useTheaterStore(s => s.setHoveredZone)
   const targetEmissive = useRef(project.featured ? 0.35 : 0.18)
@@ -110,14 +110,15 @@ function PosterFrame({ project, index, x, z, rotY, texture }: FrameProps) {
         }}
         onClick={() => {
           if (isTransitioning) return
-          setProject(project.id)
-          setSection('projects')
+          if (project.id === 'coming-soon') return
+          setPendingProject(project.id)
+          setMode('film-start')
         }}
       >
         <planeGeometry args={[FRAME_W, FRAME_H]} />
         <meshStandardMaterial
           map={texture}
-          emissive={project.featured ? '#ffd27c' : '#b07cff'}
+          emissive="#ffffff"
           emissiveIntensity={project.featured ? 0.35 : 0.18}
           roughness={0.8}
         />
