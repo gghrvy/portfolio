@@ -73,7 +73,7 @@ async def retrieve_context(query: str, repo_id: str):
         repo_id=repo_id, embedding=embedding,
     )
     return [r["content"] for r in rows]`,
-    featured: false,
+    featured: true,
     posterImage: '/posters/devdayone.png',
     screenshots: ['/screenshots/dev-day-one-1.png', '/screenshots/dev-day-one-2.png', '/screenshots/dev-day-one-3.png'],
   },
