@@ -5,6 +5,7 @@ import { Vector3 } from 'three'
 import gsap from 'gsap'
 import { useTheaterStore } from '@/store/theaterStore'
 import { CAMERA_SHOTS, SECTION_TO_SHOT } from '@/lib/theater/cameraShots'
+import type { Section } from '@/lib/theater/cameraShots'
 import { EASE, DUR } from '@/lib/theater/easing'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
@@ -165,6 +166,24 @@ export default function CameraRig() {
       })
     }
   }, [seatPov]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Preload adjacent section screenshots during transition
+  useEffect(() => {
+    if (!isTransitioning) return
+    const SECTIONS: Section[] = ['lobby', 'about', 'skills', 'projects', 'contact']
+    const idx = SECTIONS.indexOf(activeSection)
+    const toPreload = [SECTIONS[idx - 1], SECTIONS[idx + 1]].filter(Boolean)
+    if (toPreload.includes('projects')) {
+      import('@/lib/theater/projectData').then(({ PROJECTS }) => {
+        PROJECTS.forEach(p => {
+          p.screenshots?.forEach(src => {
+            const img = new Image()
+            img.src = src
+          })
+        })
+      })
+    }
+  }, [isTransitioning, activeSection])
 
   return (
     <OrbitControls

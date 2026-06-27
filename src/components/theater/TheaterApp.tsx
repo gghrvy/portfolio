@@ -210,7 +210,17 @@ export default function TheaterApp() {
     return () => window.removeEventListener('wheel', onWheel)
   }, [])
 
-  if (!detectWebGL2()) return <WebGLFallback />
+  // WebGL context loss recovery
+  const [webglLost, setWebglLost] = useState(false)
+  useEffect(() => {
+    const canvas = document.querySelector('canvas')
+    if (!canvas) return
+    const onLost = () => setWebglLost(true)
+    canvas.addEventListener('webglcontextlost', onLost)
+    return () => canvas.removeEventListener('webglcontextlost', onLost)
+  }, [])
+
+  if (!detectWebGL2() || webglLost) return <WebGLFallback />
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden', background: '#08060a' }}>
