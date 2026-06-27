@@ -59,15 +59,14 @@ function PosterFrame({ project, index, x, z, rotY, texture }: FrameProps) {
   const isTransitioning = useTheaterStore(s => s.isTransitioning)
   const setHoveredZone = useTheaterStore(s => s.setHoveredZone)
   const isComingSoon = project.id === 'coming-soon' || project.status === 'In Development'
-  const targetEmissive = useRef(project.featured ? 0.35 : 0.18)
+  const targetEmissive = useRef(project.featured ? 0.6 : 0.45)
 
   useFrame((state, delta) => {
     const mesh = posterRef.current as any
     if (!mesh) return
-    // Idle backlight breathing layered under the hover glow + trailer flare
     flare.current = Math.max(0, flare.current - delta * 0.8)
     const breathe = Math.sin(state.clock.elapsedTime * 0.6 + phase.current) * 0.05
-    targetEmissive.current = (hovered ? 0.85 : (project.featured ? 0.35 : 0.18)) + breathe + flare.current * 1.2
+    targetEmissive.current = (hovered ? 1.1 : (project.featured ? 0.6 : 0.45)) + breathe + flare.current * 1.2
     mesh.material.emissiveIntensity +=
       (targetEmissive.current - mesh.material.emissiveIntensity) * delta * 7
 
@@ -119,7 +118,7 @@ function PosterFrame({ project, index, x, z, rotY, texture }: FrameProps) {
         <meshStandardMaterial
           map={texture}
           emissive="#ffffff"
-          emissiveIntensity={isComingSoon ? 0.05 : (project.featured ? 0.35 : 0.18)}
+          emissiveIntensity={isComingSoon ? 0.08 : (project.featured ? 0.6 : 0.45)}
           color={isComingSoon ? '#444444' : '#ffffff'}
           roughness={0.8}
         />
