@@ -48,9 +48,7 @@ export default function TheaterScene() {
       <ReviewCard />
 
       <EffectComposer>
-        {panelOpen && (
-          <DepthOfField focusDistance={0.01} focalLength={0.08} bokehScale={3} height={480} />
-        )}
+        <DepthOfField focusDistance={0.01} focalLength={0.08} bokehScale={panelOpen ? 3 : 0} height={480} />
         <Bloom luminanceThreshold={0.8} luminanceSmoothing={0.5} intensity={0.25} />
         <Noise opacity={0.04} blendFunction={BlendFunction.OVERLAY} />
         <ChromaticAberration offset={[0.0006, 0.0006]} />
