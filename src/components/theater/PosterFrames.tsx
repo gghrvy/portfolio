@@ -58,7 +58,7 @@ function PosterFrame({ project, index, x, z, rotY, texture }: FrameProps) {
   const setMode = useTheaterStore(s => s.setMode)
   const isTransitioning = useTheaterStore(s => s.isTransitioning)
   const setHoveredZone = useTheaterStore(s => s.setHoveredZone)
-  const isComingSoon = project.id === 'coming-soon' || project.status === 'In Development'
+  const isComingSoon = project.id === 'coming-soon'
   const targetEmissive = useRef(project.featured ? 1.0 : 0.8)
 
   useFrame((state, delta) => {

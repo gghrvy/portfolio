@@ -18,6 +18,7 @@ import Decor from './Decor'
 import ReviewCard from './ReviewCard'
 import SweepingSpotlights from './SweepingSpotlights'
 import Curtains from './Curtains'
+import WallSconces from './WallSconces'
 
 function SceneFog() {
   const { scene } = useThree()
@@ -45,6 +46,7 @@ export default function TheaterScene() {
       <ReviewCard />
       <SweepingSpotlights />
       <Curtains />
+      <WallSconces />
 
       <EffectComposer>
         <Bloom luminanceThreshold={0.8} luminanceSmoothing={0.5} intensity={0.25} />

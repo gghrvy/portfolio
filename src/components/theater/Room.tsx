@@ -47,7 +47,17 @@ export default function Room() {
       {/* Ceiling */}
       <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, ROOM.h, 0]}>
         <planeGeometry args={[ROOM.w, ROOM.d]} />
-        <meshStandardMaterial color="#1e1420" roughness={0.95} metalness={0} />
+        <meshStandardMaterial color="#2a1e28" roughness={0.95} metalness={0} />
+      </mesh>
+
+      {/* Ceiling cove light strips — warm emissive rails flanking center */}
+      <mesh position={[-4, ROOM.h - 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[0.2, ROOM.d * 0.78]} />
+        <meshStandardMaterial color="#ffe8c0" emissive="#ffe8c0" emissiveIntensity={1.5} />
+      </mesh>
+      <mesh position={[4, ROOM.h - 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[0.2, ROOM.d * 0.78]} />
+        <meshStandardMaterial color="#ffe8c0" emissive="#ffe8c0" emissiveIntensity={1.5} />
       </mesh>
 
       {/* Back wall (behind camera) */}

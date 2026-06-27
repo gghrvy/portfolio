@@ -289,6 +289,45 @@ function buildScreenTexture(
 const SCREEN_GEOM = { w: 14, h: 7.5 }
 const SCREEN_Z = -15.8
 
+// Gilded proscenium frame dimensions
+const PFRAME_W = 15.6
+const PFRAME_H = 9.0
+const PBAR    = 0.5   // bar thickness
+const PDEPTH  = 0.12  // bar depth (z)
+const PGOLD   = { color: '#6a4e10' as const, metalness: 0.85, roughness: 0.15, emissive: '#b87818' as const, emissiveIntensity: 0.45 }
+
+function Proscenium() {
+  return (
+    <group>
+      {/* Top bar */}
+      <mesh position={[0, PFRAME_H / 2 - PBAR / 2, -0.05]}>
+        <boxGeometry args={[PFRAME_W, PBAR, PDEPTH]} />
+        <meshStandardMaterial {...PGOLD} />
+      </mesh>
+      {/* Bottom bar */}
+      <mesh position={[0, -(PFRAME_H / 2 - PBAR / 2), -0.05]}>
+        <boxGeometry args={[PFRAME_W, PBAR, PDEPTH]} />
+        <meshStandardMaterial {...PGOLD} />
+      </mesh>
+      {/* Left bar */}
+      <mesh position={[-(PFRAME_W / 2 - PBAR / 2), 0, -0.05]}>
+        <boxGeometry args={[PBAR, PFRAME_H - PBAR * 2, PDEPTH]} />
+        <meshStandardMaterial {...PGOLD} />
+      </mesh>
+      {/* Right bar */}
+      <mesh position={[PFRAME_W / 2 - PBAR / 2, 0, -0.05]}>
+        <boxGeometry args={[PBAR, PFRAME_H - PBAR * 2, PDEPTH]} />
+        <meshStandardMaterial {...PGOLD} />
+      </mesh>
+      {/* Valance header — wider crown above frame */}
+      <mesh position={[0, PFRAME_H / 2 + 0.42, -0.07]}>
+        <boxGeometry args={[PFRAME_W + 2.2, 0.72, 0.16]} />
+        <meshStandardMaterial color="#5a4010" metalness={0.75} roughness={0.2} emissive="#9a6808" emissiveIntensity={0.3} />
+      </mesh>
+    </group>
+  )
+}
+
 export default function Screen() {
   const meshRef = useRef<Mesh>(null)
   const overlayRef = useRef<Mesh>(null)
@@ -368,6 +407,8 @@ export default function Screen() {
         <planeGeometry args={[SCREEN_GEOM.w + 0.4, SCREEN_GEOM.h + 0.4]} />
         <meshStandardMaterial color="#030205" roughness={1} />
       </mesh>
+
+      <Proscenium />
 
       {/* Left curtain */}
       <mesh ref={curtainLRef} position={[-(SCREEN_GEOM.w / 2 + 0.9), 0, 0.05]}>
