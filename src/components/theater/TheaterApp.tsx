@@ -20,6 +20,7 @@ import NowShowingMarquee from '@/components/ui/NowShowingMarquee'
 import IntermissionOverlay from './IntermissionOverlay'
 import SeatPovOverlay from '@/components/ui/SeatPovOverlay'
 import CVDownloadButton from '@/components/ui/CVDownloadButton'
+import KonamiEgg from '@/components/ui/KonamiEgg'
 import { useTheaterStore } from '@/store/theaterStore'
 import type { Section } from '@/lib/theater/cameraShots'
 import { sounds } from '@/lib/theater/sounds'
@@ -248,6 +249,7 @@ export default function TheaterApp() {
         <IntermissionOverlay />
         <SeatPovOverlay />
         <CVDownloadButton />
+        <KonamiEgg />
       </div>
 
       <LoadingScreen />
