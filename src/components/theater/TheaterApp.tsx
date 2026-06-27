@@ -19,6 +19,7 @@ import FilmStartSequence from './FilmStartSequence'
 import NowShowingMarquee from '@/components/ui/NowShowingMarquee'
 import IntermissionOverlay from './IntermissionOverlay'
 import SeatPovOverlay from '@/components/ui/SeatPovOverlay'
+import CVDownloadButton from '@/components/ui/CVDownloadButton'
 import { useTheaterStore } from '@/store/theaterStore'
 import type { Section } from '@/lib/theater/cameraShots'
 import { sounds } from '@/lib/theater/sounds'
@@ -246,6 +247,7 @@ export default function TheaterApp() {
         <IntermissionController />
         <IntermissionOverlay />
         <SeatPovOverlay />
+        <CVDownloadButton />
       </div>
 
       <LoadingScreen />
