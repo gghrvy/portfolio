@@ -59,14 +59,14 @@ function PosterFrame({ project, index, x, z, rotY, texture }: FrameProps) {
   const isTransitioning = useTheaterStore(s => s.isTransitioning)
   const setHoveredZone = useTheaterStore(s => s.setHoveredZone)
   const isComingSoon = project.id === 'coming-soon' || project.status === 'In Development'
-  const targetEmissive = useRef(project.featured ? 0.45 : 0.28)
+  const targetEmissive = useRef(project.featured ? 1.0 : 0.8)
 
   useFrame((state, delta) => {
     const mesh = posterRef.current as any
     if (!mesh) return
     flare.current = Math.max(0, flare.current - delta * 0.8)
-    const breathe = Math.sin(state.clock.elapsedTime * 0.6 + phase.current) * 0.05
-    targetEmissive.current = (hovered ? 0.9 : (project.featured ? 0.45 : 0.28)) + breathe + flare.current * 1.2
+    const breathe = Math.sin(state.clock.elapsedTime * 0.6 + phase.current) * 0.04
+    targetEmissive.current = (hovered ? 1.5 : (project.featured ? 1.0 : 0.8)) + breathe + flare.current * 0.6
     mesh.material.emissiveIntensity +=
       (targetEmissive.current - mesh.material.emissiveIntensity) * delta * 7
 
@@ -117,8 +117,9 @@ function PosterFrame({ project, index, x, z, rotY, texture }: FrameProps) {
         <planeGeometry args={[FRAME_W, FRAME_H]} />
         <meshStandardMaterial
           map={texture}
+          emissiveMap={texture}
           emissive="#ffffff"
-          emissiveIntensity={isComingSoon ? 0.08 : (project.featured ? 0.6 : 0.45)}
+          emissiveIntensity={isComingSoon ? 0.05 : (project.featured ? 1.0 : 0.8)}
           color={isComingSoon ? '#444444' : '#ffffff'}
           roughness={0.8}
         />
