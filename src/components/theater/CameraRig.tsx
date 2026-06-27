@@ -140,10 +140,14 @@ export default function CameraRig() {
   return (
     <OrbitControls
       ref={controlsRef}
-      enablePan
-      enableZoom
+      enablePan={false}
+      enableZoom={false}
       dampingFactor={0.08}
       enableDamping
+      minPolarAngle={Math.PI * 0.3}
+      maxPolarAngle={Math.PI * 0.65}
+      minAzimuthAngle={-Math.PI * 0.3}
+      maxAzimuthAngle={Math.PI * 0.3}
     />
   )
 }

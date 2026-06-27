@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useEffect, useLayoutEffect, useState } from 'react'
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { PerformanceMonitor } from '@react-three/drei'
 import TheaterScene from './TheaterScene'
@@ -16,7 +16,84 @@ import Hints from '@/components/ui/Hints'
 import CustomCursor from '@/components/ui/CustomCursor'
 import IntermissionController from './IntermissionController'
 import { useTheaterStore } from '@/store/theaterStore'
+import type { Section } from '@/lib/theater/cameraShots'
+import { sounds } from '@/lib/theater/sounds'
 import { PROJECTS } from '@/lib/theater/projectData'
+
+// DOM-rendered ticket form — always visible, always interactive, no Canvas dependency.
+function TicketBoothOverlay() {
+  const mode = useTheaterStore(s => s.mode)
+  const setVisitorName = useTheaterStore(s => s.setVisitorName)
+  const [name, setName] = useState('')
+  const [printing, setPrinting] = useState(false)
+
+  if (mode !== 'ticket') return null
+
+  const issue = (visitor: string) => {
+    if (printing) return
+    setPrinting(true)
+    sounds.play('chatter')
+    localStorage.setItem('hm-visited', '1')
+    setVisitorName(visitor.trim() || 'GUEST')
+  }
+
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, zIndex: 20,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      pointerEvents: 'none',
+    }}>
+      <div style={{
+        pointerEvents: 'all',
+        width: 280, padding: '24px',
+        background: 'rgba(12,8,6,0.96)', backdropFilter: 'blur(14px)',
+        border: '1px solid rgba(255,180,71,0.35)', borderRadius: 12,
+        textAlign: 'center',
+      }}>
+        <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 9, letterSpacing: '0.25em', color: '#ffb347', textTransform: 'uppercase', marginBottom: 8 }}>
+          Box Office
+        </p>
+        <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.6)', marginBottom: 16 }}>
+          One ticket for tonight&apos;s premiere. Your name?
+        </p>
+        <form onSubmit={e => { e.preventDefault(); issue(name) }}>
+          <input
+            value={name}
+            onChange={e => setName(e.target.value)}
+            maxLength={24}
+            placeholder="Your name"
+            autoFocus
+            style={{
+              width: '100%', padding: '8px 12px', boxSizing: 'border-box',
+              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: 6, color: '#fff', fontSize: 13,
+              fontFamily: "'Plus Jakarta Sans', sans-serif", outline: 'none',
+              textAlign: 'center', marginBottom: 12,
+            }}
+          />
+          <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+            <button type="submit" disabled={printing} style={{
+              padding: '7px 16px', background: 'rgba(255,180,71,0.14)',
+              border: '1px solid rgba(255,180,71,0.5)', borderRadius: 6,
+              color: '#ffb347', fontFamily: "'Space Mono', monospace",
+              fontSize: 10, letterSpacing: '0.12em', cursor: 'pointer',
+            }}>
+              {printing ? 'PRINTING…' : 'GET TICKET'}
+            </button>
+            <button type="button" disabled={printing} onClick={() => issue('GUEST')} style={{
+              padding: '7px 14px', background: 'transparent',
+              border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6,
+              color: 'rgba(255,255,255,0.4)', fontFamily: "'Space Mono', monospace",
+              fontSize: 10, letterSpacing: '0.12em', cursor: 'pointer',
+            }}>
+              SKIP
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
 
 // Plain-HTML resume for browsers without WebGL2 (and crawlers)
 function WebGLFallback() {
@@ -85,6 +162,23 @@ export default function TheaterApp() {
     return () => document.removeEventListener('visibilitychange', onVis)
   }, [])
 
+  // Scroll to navigate sections — throttled to prevent runaway skipping
+  const scrollCooldown = useRef(false)
+  useEffect(() => {
+    const SECTIONS: Section[] = ['lobby', 'about', 'skills', 'projects', 'contact']
+    const onWheel = (e: WheelEvent) => {
+      const { mode, isTransitioning, activeSection, setSection } = useTheaterStore.getState()
+      if (mode !== 'normal' || isTransitioning || scrollCooldown.current) return
+      scrollCooldown.current = true
+      setTimeout(() => { scrollCooldown.current = false }, 900)
+      const idx = SECTIONS.indexOf(activeSection as Section)
+      if (e.deltaY > 0 && idx < SECTIONS.length - 1) setSection(SECTIONS[idx + 1])
+      else if (e.deltaY < 0 && idx > 0) setSection(SECTIONS[idx - 1])
+    }
+    window.addEventListener('wheel', onWheel, { passive: true })
+    return () => window.removeEventListener('wheel', onWheel)
+  }, [])
+
   if (!detectWebGL2()) return <WebGLFallback />
 
   return (
@@ -112,6 +206,7 @@ export default function TheaterApp() {
 
       {/* DOM overlay */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10 }}>
+        <TicketBoothOverlay />
         <FilmReelNav />
         <SoundToggle />
         <TrailerButton />
