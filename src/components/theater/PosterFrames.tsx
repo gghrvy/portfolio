@@ -58,6 +58,7 @@ function PosterFrame({ project, index, x, z, rotY, texture }: FrameProps) {
   const setMode = useTheaterStore(s => s.setMode)
   const isTransitioning = useTheaterStore(s => s.isTransitioning)
   const setHoveredZone = useTheaterStore(s => s.setHoveredZone)
+  const isComingSoon = project.id === 'coming-soon' || project.status === 'In Development'
   const targetEmissive = useRef(project.featured ? 0.35 : 0.18)
 
   useFrame((state, delta) => {
@@ -97,7 +98,7 @@ function PosterFrame({ project, index, x, z, rotY, texture }: FrameProps) {
         ref={posterRef}
         position={[0, 0, 0.01]}
         onPointerEnter={() => {
-          if (!isTransitioning) {
+          if (!isTransitioning && !isComingSoon) {
             setHovered(true)
             setHoveredZone('projects')
             document.body.style.cursor = 'pointer'
@@ -109,8 +110,7 @@ function PosterFrame({ project, index, x, z, rotY, texture }: FrameProps) {
           document.body.style.cursor = 'default'
         }}
         onClick={() => {
-          if (isTransitioning) return
-          if (project.id === 'coming-soon') return
+          if (isTransitioning || isComingSoon) return
           setPendingProject(project.id)
           setMode('film-start')
         }}
@@ -119,10 +119,26 @@ function PosterFrame({ project, index, x, z, rotY, texture }: FrameProps) {
         <meshStandardMaterial
           map={texture}
           emissive="#ffffff"
-          emissiveIntensity={project.featured ? 0.35 : 0.18}
+          emissiveIntensity={isComingSoon ? 0.05 : (project.featured ? 0.35 : 0.18)}
+          color={isComingSoon ? '#444444' : '#ffffff'}
           roughness={0.8}
         />
       </mesh>
+
+      {isComingSoon && (
+        <Html position={[0, 0, 0.02]} center style={{ pointerEvents: 'none' }}>
+          <div style={{
+            fontFamily: "'Space Mono', monospace",
+            fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase',
+            color: 'rgba(255,255,255,0.5)',
+            background: 'rgba(0,0,0,0.6)',
+            padding: '4px 10px', borderRadius: 4,
+            border: '1px solid rgba(255,255,255,0.15)',
+          }}>
+            Coming Soon
+          </div>
+        </Html>
+      )}
 
       {/* Top illumination strip */}
       <mesh position={[0, FRAME_H / 2 + 0.14, 0]}>
