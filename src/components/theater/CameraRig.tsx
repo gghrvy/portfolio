@@ -26,6 +26,7 @@ export default function CameraRig() {
   const setTransitioning = useTheaterStore(s => s.setTransitioning)
   const isTransitioning = useTheaterStore(s => s.isTransitioning)
   const mode = useTheaterStore(s => s.mode)
+  const seatPov = useTheaterStore(s => s.seatPov)
   const reduced = useReducedMotion()
   const tweensRef = useRef<gsap.core.Tween[]>([])
   const isFirstMount = useRef(true)
@@ -136,6 +137,34 @@ export default function CameraRig() {
     })
     tweensRef.current = [t1, t2]
   }, [activeSection]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const controls = controlsRef.current
+    if (!controls) return
+
+    if (seatPov) {
+      controls.enabled = false
+      tweensRef.current.forEach(t => t.kill())
+      const [sx, sy, sz] = seatPov
+      gsap.to(camera.position, {
+        x: sx, y: sy, z: sz,
+        duration: 1.2, ease: EASE.camera,
+        onUpdate: () => camera.lookAt(0, 5.5, -15),
+      })
+    } else {
+      const shot = CAMERA_SHOTS[SECTION_TO_SHOT[useTheaterStore.getState().activeSection]]
+      gsap.to(camera.position, {
+        x: shot.position[0], y: shot.position[1], z: shot.position[2],
+        duration: 1.2, ease: EASE.camera,
+        onComplete: () => {
+          if (controls) {
+            controls.target.set(...shot.target)
+            controls.enabled = true
+          }
+        },
+      })
+    }
+  }, [seatPov]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <OrbitControls

@@ -29,10 +29,13 @@ export default function ScreenPanel() {
 
   const Panel = activeSection !== 'lobby' ? PANEL_MAP[activeSection] : null
 
-  // Escape key returns to lobby
+  // Escape key: clear seat POV first, then return to lobby
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && activeSection !== 'lobby') setSection('lobby')
+      if (e.key !== 'Escape') return
+      const state = useTheaterStore.getState()
+      if (state.seatPov) { state.setSeatPov(null); return }
+      if (activeSection !== 'lobby') setSection('lobby')
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)

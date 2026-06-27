@@ -66,6 +66,8 @@ export default function Seats() {
   const setSection     = useTheaterStore(s => s.setSection)
   const isTransitioning = useTheaterStore(s => s.isTransitioning)
   const setHoveredZone = useTheaterStore(s => s.setHoveredZone)
+  const setSeatPov = useTheaterStore(s => s.setSeatPov)
+  const seatPov = useTheaterStore(s => s.seatPov)
   const pulseRef = useRef(0)
   const rockRef = useRef(0)
   const [hovered, setHovered] = useState(false)
@@ -119,8 +121,19 @@ export default function Seats() {
 
   return (
     <group>
-      {/* Seat cushion */}
-      <instancedMesh ref={cushionRef} args={[undefined, undefined, COUNT]} {...sharedProps}>
+      {/* Seat cushion — clickable for seat POV */}
+      <instancedMesh
+        ref={cushionRef}
+        args={[undefined, undefined, COUNT]}
+        {...sharedProps}
+        onClick={(e) => {
+          if (isTransitioning || seatPov) return
+          e.stopPropagation()
+          const idx = e.instanceId ?? HIGHLIGHT_INDEX
+          const [sx, , sz] = positions[idx]
+          setSeatPov([sx, CUSHION_Y + 0.9, sz])
+        }}
+      >
         <boxGeometry args={[CUSHION_W, CUSHION_H, CUSHION_D]} />
         <meshStandardMaterial roughness={0.92} roughnessMap={fabricRough ?? undefined} metalness={0} vertexColors />
       </instancedMesh>
@@ -143,11 +156,11 @@ export default function Seats() {
         <meshStandardMaterial color="#1a0808" roughness={0.9} metalness={0.15} />
       </instancedMesh>
 
-      {/* Invisible click target over highlight seat */}
+      {/* Invisible hover target over highlight seat */}
       <mesh
         position={[HIGHLIGHT_X, 1.6, HIGHLIGHT_Z]}
         onPointerEnter={() => {
-          if (!isTransitioning) {
+          if (!isTransitioning && !seatPov) {
             setHovered(true)
             setHoveredZone('about')
             document.body.style.cursor = 'pointer'
@@ -158,7 +171,11 @@ export default function Seats() {
           setHoveredZone(null)
           document.body.style.cursor = 'default'
         }}
-        onClick={() => { if (!isTransitioning) setSection('about') }}
+        onClick={() => {
+          if (isTransitioning || seatPov) return
+          const [sx, , sz] = positions[HIGHLIGHT_INDEX]
+          setSeatPov([sx, CUSHION_Y + 0.9, sz])
+        }}
       >
         <boxGeometry args={[CUSHION_W + 0.4, 1.4, CUSHION_D + 0.4]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
