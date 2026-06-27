@@ -155,16 +155,21 @@ function WIPNote() {
   return (
     <div style={{
       position: 'absolute',
-      bottom: 58,
+      bottom: 90,
       left: '50%',
       transform: 'translateX(-50%)',
       fontFamily: "'Space Mono', monospace",
-      fontSize: 9,
-      letterSpacing: '0.22em',
+      fontSize: 10,
+      letterSpacing: '0.25em',
       textTransform: 'uppercase',
-      color: 'rgba(255,255,255,0.28)',
+      color: 'rgba(255,210,124,0.75)',
       whiteSpace: 'nowrap',
       pointerEvents: 'none',
+      background: 'rgba(0,0,0,0.45)',
+      backdropFilter: 'blur(6px)',
+      padding: '6px 16px',
+      borderRadius: 4,
+      border: '1px solid rgba(255,210,124,0.15)',
     }}>
       ✦ still learning · improving every day ✦
     </div>
