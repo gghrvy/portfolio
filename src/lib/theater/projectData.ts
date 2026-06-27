@@ -13,6 +13,7 @@ export interface Project {
   featured: boolean
   /** Optional key-art poster (2:3 portrait) — falls back to the canvas-drawn poster when absent */
   posterImage?: string
+  screenshots?: string[]
 }
 
 export const PROJECTS: Project[] = [
@@ -30,6 +31,7 @@ Route::middleware(['auth', 'role:admin'])
   ->group(fn() => Route::resource('reports', ReportController::class));`,
     featured: false,
     posterImage: '/posters/onetap.png',
+    screenshots: ['/screenshots/one-tap-1.png', '/screenshots/one-tap-2.png', '/screenshots/one-tap-3.png'],
   },
   {
     id: 'digital-twin',
@@ -73,6 +75,7 @@ async def retrieve_context(query: str, repo_id: str):
     return [r["content"] for r in rows]`,
     featured: false,
     posterImage: '/posters/devdayone.png',
+    screenshots: ['/screenshots/dev-day-one-1.png', '/screenshots/dev-day-one-2.png', '/screenshots/dev-day-one-3.png'],
   },
   {
     id: 'coming-soon',

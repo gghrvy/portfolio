@@ -70,6 +70,30 @@ export default function ProjectPanel() {
 
       <motion.p variants={cascadeItem} style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 13, lineHeight: 1.75, color: 'rgba(255,255,255,0.55)', marginBottom: 24 }}>{project.description}</motion.p>
 
+      {project.screenshots && project.screenshots.length > 0 && (
+        <motion.div variants={cascadeItem} style={{ marginBottom: 24 }}>
+          <p style={{ ...label, marginBottom: 8 }}>Screens</p>
+          <div style={{
+            display: 'flex', gap: 8, overflowX: 'auto',
+            scrollbarWidth: 'none',
+            paddingBottom: 4,
+          }}>
+            {project.screenshots.map((src, i) => (
+              <img
+                key={i}
+                src={src}
+                alt={`${project.title} screenshot ${i + 1}`}
+                style={{
+                  height: 110, width: 'auto', borderRadius: 6,
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  flexShrink: 0, objectFit: 'cover',
+                }}
+              />
+            ))}
+          </div>
+        </motion.div>
+      )}
+
       <motion.div variants={cascadeItem} style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 24 }}>
         {project.tags.map(t => (
           <span key={t} style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 10, fontWeight: 500, color: 'rgba(255,255,255,0.35)', padding: '3px 10px', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 5, background: 'rgba(255,255,255,0.02)' }}>{t}</span>
