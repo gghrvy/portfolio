@@ -1,7 +1,7 @@
 import type { Section } from './cameraShots'
 
 export type LightingStateName = 'HOUSE' | 'SHOWTIME' | 'INTIMATE'
-export type TheaterMode = 'normal' | 'trailer' | 'intermission' | 'ticket'
+export type TheaterMode = 'normal' | 'trailer' | 'intermission' | 'ticket' | 'film-start'
 
 export interface LightingPreset {
   ambient: { intensity: number; color: string }
@@ -48,6 +48,7 @@ export const LIGHTING_PRESETS: Record<LightingStateName, LightingPreset> = {
 
 export function deriveLightingState(section: Section, mode: TheaterMode): LightingStateName {
   if (mode === 'trailer') return 'SHOWTIME'
+  if (mode === 'film-start') return 'SHOWTIME'
   if (mode === 'intermission') return 'HOUSE'
   if (section === 'contact') return 'INTIMATE'
   if (section === 'lobby') return 'HOUSE'
