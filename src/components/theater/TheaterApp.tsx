@@ -17,6 +17,7 @@ import CustomCursor from '@/components/ui/CustomCursor'
 import IntermissionController from './IntermissionController'
 import FilmStartSequence from './FilmStartSequence'
 import NowShowingMarquee from '@/components/ui/NowShowingMarquee'
+import IntermissionOverlay from './IntermissionOverlay'
 import { useTheaterStore } from '@/store/theaterStore'
 import type { Section } from '@/lib/theater/cameraShots'
 import { sounds } from '@/lib/theater/sounds'
@@ -242,6 +243,7 @@ export default function TheaterApp() {
         <TicketStub />
         <Hints />
         <IntermissionController />
+        <IntermissionOverlay />
       </div>
 
       <LoadingScreen />
