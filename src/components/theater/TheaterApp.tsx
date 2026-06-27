@@ -199,6 +199,7 @@ export default function TheaterApp() {
     const SECTIONS: Section[] = ['lobby', 'about', 'skills', 'projects', 'contact']
     const onWheel = (e: WheelEvent) => {
       if (e.ctrlKey) return  // pinch-to-zoom on touchpad — let OrbitControls handle it
+      if (Math.abs(e.deltaY) < 50) return  // ignore touchpad micro-scrolls
       const { mode, isTransitioning, activeSection, setSection } = useTheaterStore.getState()
       if (mode !== 'normal' || isTransitioning || scrollCooldown.current) return
       scrollCooldown.current = true
