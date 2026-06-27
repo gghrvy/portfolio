@@ -37,24 +37,33 @@ export default function Hints() {
   return (
     <AnimatePresence>
       {show && mode === 'normal' && (
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
           style={{
             position: 'absolute', bottom: 92, left: '50%', transform: 'translateX(-50%)',
-            fontFamily: "'Space Mono', monospace", fontSize: 10,
-            letterSpacing: '0.18em', textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.45)',
-            background: 'rgba(8,6,10,0.7)', backdropFilter: 'blur(8px)',
-            padding: '8px 18px', borderRadius: 8,
-            border: '1px solid rgba(255,255,255,0.06)',
+            background: 'rgba(8,6,10,0.82)', backdropFilter: 'blur(10px)',
+            padding: '12px 20px', borderRadius: 10,
+            border: '1px solid rgba(255,255,255,0.07)',
             pointerEvents: 'none', whiteSpace: 'nowrap',
+            display: 'flex', gap: 20, alignItems: 'center',
           }}
         >
-          Drag to look around · Click anything that glows
-        </motion.p>
+          {[
+            { key: '↕ Scroll', desc: 'Navigate' },
+            { key: '← →', desc: 'Arrow keys' },
+            { key: '1–5', desc: 'Jump to section' },
+            { key: 'Click', desc: 'Glowing objects' },
+            { key: 'Drag', desc: 'Look around' },
+          ].map(({ key, desc }) => (
+            <div key={key} style={{ textAlign: 'center' }}>
+              <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 9, letterSpacing: '0.1em', color: 'rgba(255,210,124,0.7)', marginBottom: 3 }}>{key}</div>
+              <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 9, color: 'rgba(255,255,255,0.3)' }}>{desc}</div>
+            </div>
+          ))}
+        </motion.div>
       )}
     </AnimatePresence>
   )
