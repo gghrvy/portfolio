@@ -148,6 +148,29 @@ function detectWebGL2(): boolean {
   return !!canvas.getContext('webgl2')
 }
 
+function WIPNote() {
+  const mode = useTheaterStore(s => s.mode)
+  const activeSection = useTheaterStore(s => s.activeSection)
+  if (mode !== 'normal' || activeSection !== 'lobby') return null
+  return (
+    <div style={{
+      position: 'absolute',
+      bottom: 58,
+      left: '50%',
+      transform: 'translateX(-50%)',
+      fontFamily: "'Space Mono', monospace",
+      fontSize: 9,
+      letterSpacing: '0.22em',
+      textTransform: 'uppercase',
+      color: 'rgba(255,255,255,0.28)',
+      whiteSpace: 'nowrap',
+      pointerEvents: 'none',
+    }}>
+      ✦ still learning · improving every day ✦
+    </div>
+  )
+}
+
 export default function TheaterApp() {
   const setMode = useTheaterStore(s => s.setMode)
   const [frameloop, setFrameloop] = useState<'always' | 'never'>('always')
@@ -262,6 +285,7 @@ export default function TheaterApp() {
         <SeatPovOverlay />
         <CVDownloadButton />
         <KonamiEgg />
+        <WIPNote />
       </div>
 
       <LoadingScreen />
