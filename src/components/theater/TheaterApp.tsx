@@ -16,6 +16,7 @@ import Hints from '@/components/ui/Hints'
 import CustomCursor from '@/components/ui/CustomCursor'
 import IntermissionController from './IntermissionController'
 import FilmStartSequence from './FilmStartSequence'
+import NowShowingMarquee from '@/components/ui/NowShowingMarquee'
 import { useTheaterStore } from '@/store/theaterStore'
 import type { Section } from '@/lib/theater/cameraShots'
 import { sounds } from '@/lib/theater/sounds'
@@ -232,6 +233,7 @@ export default function TheaterApp() {
 
       {/* DOM overlay */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10 }}>
+        <NowShowingMarquee />
         <FilmStartSequence />
         <TicketBoothOverlay />
         <FilmReelNav />
