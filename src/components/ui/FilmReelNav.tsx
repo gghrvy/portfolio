@@ -28,24 +28,34 @@ export default function FilmReelNav() {
   const activeSection = useTheaterStore(s => s.activeSection)
   const isTransitioning = useTheaterStore(s => s.isTransitioning)
   const setSection = useTheaterStore(s => s.setSection)
+  const setMode = useTheaterStore(s => s.setMode)
   const mode = useTheaterStore(s => s.mode)
+
+  const navigate = (sectionId: Section) => {
+    if (mode === 'ticket') {
+      localStorage.setItem('hm-visited', '1')
+      setMode('normal')
+    }
+    sounds.play('click')
+    setSection(sectionId)
+  }
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (isTransitioning || mode !== 'normal') return
+      if (isTransitioning) return
       const idx = SECTIONS.findIndex(s => s.id === activeSection)
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        setSection(SECTIONS[(idx + 1) % SECTIONS.length].id)
+        navigate(SECTIONS[(idx + 1) % SECTIONS.length].id)
       } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        setSection(SECTIONS[(idx - 1 + SECTIONS.length) % SECTIONS.length].id)
+        navigate(SECTIONS[(idx - 1 + SECTIONS.length) % SECTIONS.length].id)
       } else {
         const num = parseInt(e.key)
-        if (num >= 1 && num <= 5) setSection(SECTIONS[num - 1].id)
+        if (num >= 1 && num <= 5) navigate(SECTIONS[num - 1].id)
       }
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [activeSection, isTransitioning, setSection, mode])
+  }, [activeSection, isTransitioning, mode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <motion.nav
@@ -86,21 +96,17 @@ export default function FilmReelNav() {
           <button
             key={s.id}
             onClick={() => {
-              if (isTransitioning || mode !== 'normal') return
-              sounds.play('click')
-              if (s.id === activeSection && s.id !== 'lobby') {
-                setSection('lobby')
-              } else {
-                setSection(s.id)
-              }
+              if (isTransitioning) return
+              const target = (s.id === activeSection && s.id !== 'lobby') ? 'lobby' : s.id
+              navigate(target)
             }}
-            disabled={isTransitioning || mode !== 'normal'}
+            disabled={isTransitioning}
             aria-current={active ? 'page' : undefined}
             aria-keyshortcuts={String(i + 1)}
             style={{
               position: 'relative', padding: '10px 20px',
               background: 'transparent', border: 'none',
-              cursor: isTransitioning ? 'default' : 'pointer',
+              cursor: isTransitioning ? 'wait' : 'pointer',
               fontFamily: "'Space Mono', monospace", fontSize: 9,
               letterSpacing: '0.18em', textTransform: 'uppercase',
               color: active ? '#ffd27c' : 'rgba(255,255,255,0.32)',
