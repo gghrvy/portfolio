@@ -162,6 +162,31 @@ export default function TheaterApp() {
     return () => document.removeEventListener('visibilitychange', onVis)
   }, [])
 
+  // Deep linking — read ?section= on mount, write on every change
+  const activeSection = useTheaterStore(s => s.activeSection)
+  const setSection = useTheaterStore(s => s.setSection)
+
+  useEffect(() => {
+    const param = new URLSearchParams(window.location.search).get('section')
+    const valid: Section[] = ['lobby', 'about', 'skills', 'projects', 'contact']
+    if (param && valid.includes(param as Section)) {
+      // Delay until after ticket mode check (which runs in useLayoutEffect)
+      const t = setTimeout(() => {
+        if (useTheaterStore.getState().mode === 'normal') {
+          setSection(param as Section)
+        }
+      }, 100)
+      return () => clearTimeout(t)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const url = activeSection === 'lobby'
+      ? window.location.pathname
+      : `${window.location.pathname}?section=${activeSection}`
+    history.replaceState(null, '', url)
+  }, [activeSection])
+
   // Scroll to navigate sections — throttled to prevent runaway skipping
   const scrollCooldown = useRef(false)
   useEffect(() => {
