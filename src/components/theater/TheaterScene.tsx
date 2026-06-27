@@ -3,7 +3,8 @@
 import { FogExp2 } from 'three'
 import { useThree } from '@react-three/fiber'
 import { useEffect } from 'react'
-import { EffectComposer, Bloom, Vignette, ToneMapping, Noise, ChromaticAberration } from '@react-three/postprocessing'
+import { useTheaterStore } from '@/store/theaterStore'
+import { EffectComposer, Bloom, Vignette, ToneMapping, Noise, ChromaticAberration, DepthOfField } from '@react-three/postprocessing'
 import { ToneMappingMode, BlendFunction } from 'postprocessing'
 import HouseLights from './HouseLights'
 import Room from './Room'
@@ -27,6 +28,10 @@ function SceneFog() {
 }
 
 export default function TheaterScene() {
+  const activeSection = useTheaterStore(s => s.activeSection)
+  const isTransitioning = useTheaterStore(s => s.isTransitioning)
+  const panelOpen = activeSection !== 'lobby' && !isTransitioning
+
   return (
     <>
       <SceneFog />
@@ -43,6 +48,9 @@ export default function TheaterScene() {
       <ReviewCard />
 
       <EffectComposer>
+        {panelOpen && (
+          <DepthOfField focusDistance={0.01} focalLength={0.08} bokehScale={3} height={480} />
+        )}
         <Bloom luminanceThreshold={0.8} luminanceSmoothing={0.5} intensity={0.25} />
         <Noise opacity={0.04} blendFunction={BlendFunction.OVERLAY} />
         <ChromaticAberration offset={[0.0006, 0.0006]} />
