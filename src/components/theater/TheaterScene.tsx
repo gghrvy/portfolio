@@ -17,6 +17,7 @@ import ProjectorBeam from './ProjectorBeam'
 import CameraRig from './CameraRig'
 import Decor from './Decor'
 import ReviewCard from './ReviewCard'
+import SweepingSpotlights from './SweepingSpotlights'
 
 function SceneFog() {
   const { scene } = useThree()
@@ -46,6 +47,7 @@ export default function TheaterScene() {
       <CameraRig />
       <Decor />
       <ReviewCard />
+      <SweepingSpotlights />
 
       <EffectComposer>
         <DepthOfField focusDistance={0.01} focalLength={0.08} bokehScale={panelOpen ? 3 : 0} height={480} />
