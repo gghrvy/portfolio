@@ -94,10 +94,22 @@ export default function ProjectPanel() {
         </motion.div>
       )}
 
-      <motion.div variants={cascadeItem} style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 24 }}>
-        {project.tags.map(t => (
-          <span key={t} style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 10, fontWeight: 500, color: 'rgba(255,255,255,0.35)', padding: '3px 10px', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 5, background: 'rgba(255,255,255,0.02)' }}>{t}</span>
-        ))}
+      <motion.div variants={cascadeItem} style={{ marginBottom: 24 }}>
+        <p style={{ ...label, marginBottom: 8 }}>Cast &amp; Crew</p>
+        <div style={{ display: 'flex', gap: 0, flexDirection: 'column' }}>
+          {project.tags.map((t, i) => (
+            <div key={t} style={{
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              padding: '5px 0',
+              borderBottom: i < project.tags.length - 1 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+            }}>
+              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>{t}</span>
+              <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 8, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.2)' }}>
+                {i === 0 ? 'Lead' : i === 1 ? 'Supporting' : 'Ensemble'}
+              </span>
+            </div>
+          ))}
+        </div>
       </motion.div>
 
       {project.ctaLabel && project.ctaHref && (
