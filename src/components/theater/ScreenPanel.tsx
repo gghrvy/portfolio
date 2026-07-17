@@ -55,16 +55,20 @@ export default function ScreenPanel() {
         {Panel && !isTransitioning && (
           <motion.div
             key={activeSection}
+            data-panel="true"
             initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.97 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            onWheel={e => e.stopPropagation()}
             style={{
               width: 860,
               maxHeight: 460,
               overflowY: 'auto',
               padding: '28px 36px',
               boxSizing: 'border-box',
+              background: 'rgba(6,4,10,0.92)',
+              backdropFilter: 'blur(12px)',
               borderTop: '1px solid rgba(200,146,42,0.35)',
               borderBottom: '1px solid rgba(200,146,42,0.35)',
               color: '#fff',

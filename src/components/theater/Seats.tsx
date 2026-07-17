@@ -135,13 +135,13 @@ export default function Seats() {
         }}
       >
         <boxGeometry args={[CUSHION_W, CUSHION_H, CUSHION_D]} />
-        <meshStandardMaterial roughness={0.92} roughnessMap={fabricRough ?? undefined} metalness={0} vertexColors />
+        <meshPhysicalMaterial roughness={0.92} roughnessMap={fabricRough ?? undefined} metalness={0} vertexColors sheen={1} sheenColor="#6b0f0f" sheenRoughness={0.7} />
       </instancedMesh>
 
       {/* Backrest — slightly tilted back */}
       <instancedMesh ref={backrestRef} args={[undefined, undefined, COUNT]} {...sharedProps}>
         <boxGeometry args={[BACKREST_W, BACKREST_H, BACKREST_D]} />
-        <meshStandardMaterial roughness={0.92} roughnessMap={fabricRough ?? undefined} metalness={0} vertexColors />
+        <meshPhysicalMaterial roughness={0.92} roughnessMap={fabricRough ?? undefined} metalness={0} vertexColors sheen={1} sheenColor="#6b0f0f" sheenRoughness={0.7} />
       </instancedMesh>
 
       {/* Left leg */}

@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useLayoutEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { PerformanceMonitor } from '@react-three/drei'
 import TheaterScene from './TheaterScene'
@@ -108,11 +108,11 @@ function WebGLFallback() {
       <div style={{ maxWidth: 640, margin: '0 auto' }}>
         <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: '0.25em', color: '#ffd27c', textTransform: 'uppercase', marginBottom: 10 }}>Portfolio · Text Version</p>
         <h1 style={{ fontSize: 30, fontWeight: 700, marginBottom: 4 }}>Harvy H. Monte de Ramos</h1>
-        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', marginBottom: 6 }}>Frontend & Full Stack Developer · Cebu, PH</p>
+        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', marginBottom: 6 }}>Full Stack Developer · AI Integration · Cebu, PH</p>
         <p style={{ fontSize: 12, color: '#4ade80', marginBottom: 28 }}>● Open to work · Graduating June 2026 (USJ-R)</p>
 
         <h2 style={{ fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 10 }}>Experience</h2>
-        <p style={{ fontSize: 14, fontWeight: 600 }}>Frontend Developer Intern — Xeleqt AI, Cebu City (Mar–Jun 2026)</p>
+        <p style={{ fontSize: 14, fontWeight: 600 }}>Software Developer Intern — Xeleqt Technology Innovations Inc., Cebu City (Mar 2026 – Present)</p>
         <ul style={{ fontSize: 13, lineHeight: 1.8, color: 'rgba(255,255,255,0.6)', paddingLeft: 18, marginBottom: 28 }}>
           <li>Production web interfaces for 3 products — Next.js, React, TypeScript, AWS Amplify, Railway</li>
           <li>Real-time 3D digital-twin dashboards — Three.js, Mapbox GL, Deck.gl</li>
@@ -132,9 +132,9 @@ function WebGLFallback() {
 
         <h2 style={{ fontSize: 13, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 10 }}>Contact</h2>
         <p style={{ fontSize: 13, lineHeight: 2 }}>
-          <a href="mailto:ggtempestt@gmail.com" style={{ color: '#ffd27c' }}>ggtempestt@gmail.com</a><br />
-          <a href="https://github.com/ggkyle" style={{ color: 'rgba(255,255,255,0.6)' }}>github.com/ggkyle</a><br />
-          <a href="https://linkedin.com/in/harvy-monte-de-ramos" style={{ color: 'rgba(255,255,255,0.6)' }}>linkedin.com/in/harvy-monte-de-ramos</a><br />
+          <a href="mailto:harvyh.montederamos@gmail.com" style={{ color: '#ffd27c' }}>harvyh.montederamos@gmail.com</a><br />
+          <a href="https://github.com/gghrvy" style={{ color: 'rgba(255,255,255,0.6)' }}>github.com/gghrvy</a><br />
+          <a href="https://linkedin.com/in/harvy-montederamos" style={{ color: 'rgba(255,255,255,0.6)' }}>linkedin.com/in/harvy-montederamos</a><br />
           <a href="/cv.pdf" style={{ color: 'rgba(255,255,255,0.6)' }}>Download CV (PDF)</a>
         </p>
       </div>
@@ -221,24 +221,8 @@ export default function TheaterApp() {
     history.replaceState(null, '', url)
   }, [activeSection])
 
-  // Scroll to navigate sections — throttled to prevent runaway skipping
-  const scrollCooldown = useRef(false)
-  useEffect(() => {
-    const SECTIONS: Section[] = ['lobby', 'about', 'skills', 'projects', 'contact']
-    const onWheel = (e: WheelEvent) => {
-      if (e.ctrlKey) return  // pinch-to-zoom on touchpad — let OrbitControls handle it
-      if (Math.abs(e.deltaY) < 50) return  // ignore touchpad micro-scrolls
-      const { mode, isTransitioning, activeSection, setSection } = useTheaterStore.getState()
-      if (mode !== 'normal' || isTransitioning || scrollCooldown.current) return
-      scrollCooldown.current = true
-      setTimeout(() => { scrollCooldown.current = false }, 900)
-      const idx = SECTIONS.indexOf(activeSection as Section)
-      if (e.deltaY > 0 && idx < SECTIONS.length - 1) setSection(SECTIONS[idx + 1])
-      else if (e.deltaY < 0 && idx > 0) setSection(SECTIONS[idx - 1])
-    }
-    window.addEventListener('wheel', onWheel, { passive: true })
-    return () => window.removeEventListener('wheel', onWheel)
-  }, [])
+  // Section navigation is handled exclusively by FilmReelNav buttons.
+  // Scroll/wheel is reserved for OrbitControls zoom (enableZoom in CameraRig).
 
   // WebGL context loss recovery
   const [webglLost, setWebglLost] = useState(false)

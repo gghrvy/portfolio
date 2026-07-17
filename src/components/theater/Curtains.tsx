@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useEffect } from 'react'
+import { useFrame } from '@react-three/fiber'
 import { Mesh, BufferGeometry, Float32BufferAttribute } from 'three'
 import gsap from 'gsap'
 import { useTheaterStore } from '@/store/theaterStore'
@@ -75,6 +76,14 @@ export default function Curtains() {
   const rightRef = useRef<Mesh>(null)
   const activeSection = useTheaterStore(s => s.activeSection)
   const reduced = useReducedMotion()
+
+  useFrame(({ clock }) => {
+    if (reduced) return
+    const t = clock.elapsedTime
+    // Gentle sway — different phase per curtain, amplitude ≈ 0.012 rad
+    if (leftRef.current)  leftRef.current.rotation.z  =  Math.sin(t * 0.38) * 0.012 + Math.sin(t * 0.71) * 0.006
+    if (rightRef.current) rightRef.current.rotation.z = -Math.sin(t * 0.38 + 1.1) * 0.012 - Math.sin(t * 0.71 + 0.8) * 0.006
+  })
 
   useEffect(() => {
     const open = activeSection !== 'lobby'

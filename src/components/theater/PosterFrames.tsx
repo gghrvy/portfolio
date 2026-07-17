@@ -42,8 +42,11 @@ interface FrameProps {
 function PosterFrame({ project, index, x, z, rotY, texture }: FrameProps) {
   const posterRef = useRef<Mesh>(null)
   const groupRef = useRef<Group>(null)
+  const burstLightRef = useRef<any>(null)
   const phase = useRef(Math.random() * Math.PI * 2)
   const flare = useRef(0)
+  const burst = useRef(0)
+  const prevHovered = useRef(false)
   const [hovered, setHovered] = useState(false)
 
   // Trailer timeline flares this poster as the camera passes
@@ -69,6 +72,12 @@ function PosterFrame({ project, index, x, z, rotY, texture }: FrameProps) {
     targetEmissive.current = (hovered ? 1.5 : (project.featured ? 1.0 : 0.8)) + breathe + flare.current * 0.6
     mesh.material.emissiveIntensity +=
       (targetEmissive.current - mesh.material.emissiveIntensity) * delta * 7
+
+    // Hover light burst — flash on hover enter, decay fast
+    if (hovered && !prevHovered.current) burst.current = 1.8
+    prevHovered.current = hovered
+    burst.current = Math.max(0, burst.current - delta * 5)
+    if (burstLightRef.current) burstLightRef.current.intensity = burst.current
 
     // Tilt toward the viewer on hover
     const g = groupRef.current
@@ -149,6 +158,14 @@ function PosterFrame({ project, index, x, z, rotY, texture }: FrameProps) {
           emissiveIntensity={hovered ? 0.9 : 0.35}
         />
       </mesh>
+
+      {/* Featured halo — warm gold point light marks the premiere poster */}
+      {project.featured && (
+        <pointLight color="#c8922a" intensity={0.7} distance={5} decay={2} position={[0, 0.2, 0.6]} />
+      )}
+
+      {/* Hover burst light — transient flash when pointer enters */}
+      <pointLight ref={burstLightRef} color="#ffd27c" intensity={0} distance={6} decay={2} position={[0, 0, 0.8]} />
 
       {/* Hover name label */}
       {hovered && (
