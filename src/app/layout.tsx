@@ -2,6 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { MotionOrchestrator } from '@/components/MotionOrchestrator'
+import { PageIntro } from '@/components/PageIntro'
 import { siteUrl } from '@/lib/site-url'
 
 export const metadata: Metadata = {
@@ -22,4 +23,4 @@ const structuredData = {
   ],
 }
 
-export default function RootLayout({ children }: { children: ReactNode }) { return <html lang="en"><body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }} /><MotionOrchestrator>{children}</MotionOrchestrator></body></html> }
+export default function RootLayout({ children }: { children: ReactNode }) { return <html lang="en"><body><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }} /><PageIntro /><MotionOrchestrator>{children}</MotionOrchestrator></body></html> }
