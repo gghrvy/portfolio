@@ -14,23 +14,12 @@ export async function POST(req: NextRequest) {
 
     const { error } = await supabase
       .from('contact_submissions')
-      .insert([
-        {
-          name,
-          email,
-          message,
-          created_at: new Date().toISOString(),
-        },
-      ]);
+      .insert([{ name, email, message, created_at: new Date().toISOString() }]);
 
     if (error) throw error;
-
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Contact error:', error);
-    return NextResponse.json(
-      { error: 'Failed to submit contact form' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to submit contact form' }, { status: 500 });
   }
 }
