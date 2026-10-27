@@ -1,0 +1,55 @@
+.timeline { padding-block: var(--s-10); border-top: 1px solid var(--c-line); }
+.tl-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); align-items: start; gap: var(--s-7); }
+.tl-head { position: sticky; top: 96px; display: grid; gap: var(--s-4); }
+.tl-head h2 { font-size: var(--step-4); }
+.tl-head > p:last-child { max-width: 40ch; color: var(--c-muted); }
+
+.tl-track { position: relative; padding-left: var(--s-7); }
+.tl-rail { position: absolute; top: 0; bottom: 0; left: 7px; width: 1px; background: var(--c-line); }
+.tl-rail i { position: absolute; inset: 0; background: var(--c-signal); transform: scaleY(0); transform-origin: top; }
+.tl { margin: 0; padding: 0; list-style: none; }
+.tl-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
+  gap: var(--s-5);
+  padding-block: var(--s-6);
+  border-bottom: 1px solid var(--c-line);
+}
+.tl-node {
+  position: absolute;
+  top: calc(var(--s-6) + 5px);
+  left: calc(-1 * var(--s-7) + 3px);
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--c-line-strong);
+  background: var(--c-bg);
+  transform: rotate(45deg);
+}
+.tl-item[data-kind='Work'] .tl-node { border-color: var(--c-signal); }
+.tl-meta { display: grid; align-content: start; gap: 4px; font: 500 var(--step--2) / 1.5 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.tl-kind { color: var(--c-signal); }
+.tl-date { color: var(--c-muted); }
+.tl-content h3 { margin-bottom: var(--s-1); font-size: var(--step-2); }
+.tl-content h4 { margin-bottom: var(--s-1); font-size: var(--step-1); letter-spacing: -0.015em; line-height: 1.15; }
+.tl-org { margin-bottom: var(--s-3); color: var(--c-muted); font-size: var(--step--1); }
+.tl-body { max-width: 64ch; color: var(--c-muted); }
+.tl-body + .tl-body { margin-top: var(--s-3); }
+.tl-highlights { margin: var(--s-3) 0 0; padding-left: 1.1em; color: var(--c-muted); font-size: var(--step--1); }
+.tl-highlights li + li { margin-top: var(--s-1); }
+.tl-highlights li::marker { color: var(--c-signal); }
+.tl-scope { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); margin-top: var(--s-4); }
+.tl-scope > span { font: 500 var(--step--2) / 1 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.tl-group { padding: var(--s-8) 0 var(--s-3); }
+.tl-group h3 { margin-bottom: var(--s-3); font-size: var(--step-3); }
+.tl-group p { max-width: 56ch; color: var(--c-muted); }
+
+@media (max-width: 900px) {
+  .timeline { padding-block: var(--s-9); }
+  .tl-grid { grid-template-columns: minmax(0, 1fr); }
+  .tl-head { position: static; }
+  .tl-track { padding-left: var(--s-6); }
+  .tl-node { left: calc(-1 * var(--s-6) + 3px); }
+  .tl-item { grid-template-columns: minmax(0, 1fr); gap: var(--s-2); }
+  .tl-meta { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+}

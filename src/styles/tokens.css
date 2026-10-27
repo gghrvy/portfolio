@@ -1,0 +1,54 @@
+/* Signal Trace tokens. Canonical spec: /MASTER.md */
+:root {
+  --c-bg: #0c0e0d;
+  --c-panel: #141716;
+  --c-panel-2: #1b1f1d;
+  --c-line: #262b29;
+  --c-line-strong: #3a413d;
+  --c-text: #e7e9e2;
+  --c-muted: #8e958f;
+  --c-faint: #6b726c;
+  --c-signal: #f0a33a;
+  --c-signal-hi: #f6b85e;
+  --c-signal-dim: rgb(240 163 58 / 0.16);
+  --c-ink-on-light: #1b1f1d;
+  --c-live: #5ccf9f;
+  --c-plate-light: #e4e6df;
+
+  --f-display: var(--font-display), 'Arial Narrow', sans-serif;
+  --f-body: var(--font-body), system-ui, sans-serif;
+  --f-mono: var(--font-mono), ui-monospace, monospace;
+
+  /* fluid 360px -> 1440px */
+  --step--2: 0.6875rem;
+  --step--1: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+  --step-0: clamp(1rem, 0.96rem + 0.19vw, 1.125rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.45vw, 1.5rem);
+  --step-2: clamp(1.44rem, 1.26rem + 0.8vw, 2rem);
+  --step-3: clamp(1.73rem, 1.4rem + 1.45vw, 2.75rem);
+  --step-4: clamp(2.07rem, 1.5rem + 2.5vw, 3.75rem);
+  --step-5: clamp(2.5rem, 1.6rem + 4vw, 5.25rem);
+  --step-6: clamp(3rem, 1.5rem + 6.7vw, 7.5rem);
+
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px;
+  --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px; --s-10: 144px;
+  --gutter: clamp(16px, 4vw, 48px);
+  --wrap: 1240px;
+
+  --r-0: 0; --r-1: 2px; --r-full: 999px;
+  --glow-signal: 0 0 0 4px var(--c-signal-dim), 0 0 18px rgb(240 163 58 / 0.35);
+
+  --ease-signal: cubic-bezier(0.2, 0, 0, 1);
+  --ease-route: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --d-instant: 90ms;
+  --d-fast: 160ms;
+  --d-base: 240ms;
+  --d-slow: 420ms;
+  --d-reveal: 600ms;
+  --stagger: 40ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --d-instant: 0ms; --d-fast: 0ms; --d-base: 0ms; --d-slow: 0ms; --d-reveal: 0ms; --stagger: 0ms; }
+}
