@@ -23,6 +23,7 @@ export default function InteractiveGallery({ id, shots, name }: GalleryProps) {
   const [direction, setDirection] = useState(1)
   const [open, setOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [spot, setSpot] = useState<number | null>(null)
   const expandRef = useRef<HTMLButtonElement>(null)
   const main = shots[active]
   const ratio = `${shots[0].width} / ${shots[0].height}`
@@ -42,7 +43,11 @@ export default function InteractiveGallery({ id, shots, name }: GalleryProps) {
     const next = (index + shots.length) % shots.length
     setDirection(next > active || (active === shots.length - 1 && next === 0) ? 1 : -1)
     setActive(next)
+    setSpot(null)
   }
+
+  const hotspots = main.hotspots ?? []
+  const toggleSpot = (index: number) => setSpot((current) => (current === index ? null : index))
 
   return (
     <LazyMotion features={loadFeatures} strict>
@@ -65,11 +70,42 @@ export default function InteractiveGallery({ id, shots, name }: GalleryProps) {
                   </AnimatePresence>
                 </m.div>
               )}
+              {!open && hotspots.length > 0 && (
+                <div className="hotspots island-dark" style={{ aspectRatio: `${main.width} / ${main.height}` }}>
+                  {hotspots.map((hotspot, index) => (
+                    <button
+                      key={hotspot.title}
+                      type="button"
+                      className="hotspot"
+                      style={{ left: `${hotspot.x}%`, top: `${hotspot.y}%`, '--i': index } as React.CSSProperties}
+                      aria-label={`${index + 1}. ${hotspot.title}`}
+                      aria-pressed={spot === index}
+                      aria-controls={`${id}-tour`}
+                      onClick={() => toggleSpot(index)}
+                    >
+                      <span aria-hidden="true">{index + 1}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
               <button ref={expandRef} type="button" className="gallery-expand" onClick={() => setOpen(true)} aria-label={`Expand ${main.label}`} aria-haspopup="dialog">
                 <Maximize2 size={15} aria-hidden="true" /><span>Expand</span>
               </button>
             </div>
             <figcaption aria-live="polite"><span>{main.label}</span><p>{main.note}</p></figcaption>
+            {hotspots.length > 0 && (
+              <ol className="tour" id={`${id}-tour`} aria-label={`What to look at in ${main.label}`}>
+                {hotspots.map((hotspot, index) => (
+                  <li key={hotspot.title} data-active={spot === index}>
+                    <button type="button" className="tour-item" aria-expanded={spot === index} onClick={() => toggleSpot(index)}>
+                      <span className="tour-num" aria-hidden="true">{index + 1}</span>
+                      <span className="tour-title">{hotspot.title}</span>
+                    </button>
+                    {spot === index && <p className="tour-body">{hotspot.body}</p>}
+                  </li>
+                ))}
+              </ol>
+            )}
           </figure>
 
           <div className="gallery-thumbs" role="group" aria-label={`${name} screens. Use arrow keys to switch.`} onKeyDown={onThumbKey}>

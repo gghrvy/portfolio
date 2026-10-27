@@ -1,0 +1,24 @@
+/* Printing the page gives a clean, ink-on-paper résumé of the content */
+@media print {
+  :root, [data-theme] { --bg: #fff; --surface: #fff; --surface-2: #fff; --text: #111; --text-muted: #444; --border: #ccc; --border-strong: #888; --accent-text: #8a3608; --accent: #8a3608; --plate: #fff; --plate-border: #ccc; --shadow-plate: none; color-scheme: light; }
+  @page { margin: 16mm 14mm; }
+  html, body { background: #fff; font-size: 11pt; }
+  .site-header, .scroll-trace, .cursor, .hero-field, .back-to-top, .toaster, .palette, .skip-link,
+  .gallery-thumbs, .gallery-expand, .hotspots, .tour, .case-links, .case-next, .pipeline-lane,
+  .aria-visual, .copy-email, .contact-profiles, .button, .index-preview, .work-index-thumb, .skill-tabs, .site-footer-bar { display: none !important; }
+  .island-dark { --bg: #fff; --text: #111; --text-muted: #444; }
+  *, *::before, *::after { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
+  .hero { min-height: 0; border: 0; }
+  .hero-inner { padding: 0; }
+  .hero-name { font-size: 34pt; }
+  .work, .about, .skills, .timeline, .contact, .case, .aria { min-height: 0; padding-block: 12pt; background: none; }
+  .gallery { position: static; }
+  .case-body, .about-grid, .aria-grid, .tl-grid, .skills-head, .work-head, .contact-grid { display: block; }
+  .skill-panel[data-active='false'] { visibility: visible; }
+  .skill-panels { display: block; }
+  .skill-panel { padding: 6pt 0; }
+  .case-note, .tl-item, .skill-panel, .facts div { break-inside: avoid; }
+  .case { break-before: page; }
+  .contact-email { font-size: 16pt; }
+  a[href^='http']:not(.button)::after { content: ' (' attr(href) ')'; color: var(--text-muted); font-size: 9pt; }
+}

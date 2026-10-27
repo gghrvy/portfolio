@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 const built = [
   { term: 'Stack', detail: 'Next.js 16 · React 19 · TypeScript · Vercel' },
   { term: 'Type', detail: 'Clash Grotesk · IBM Plex Sans · IBM Plex Mono' },
+  { term: 'Shortcut', detail: '⌘K / Ctrl K opens a command palette for every section and action' },
   { term: 'Motion', detail: 'CSS scroll-driven animations · View Transitions · Framer Motion · Lenis · Canvas 2D · React Three Fiber' },
 ]
 

@@ -64,7 +64,7 @@
 
 /* Footer: colophon above a slim bar */
 .site-footer-inner { display: grid; gap: var(--s-5); padding-block: var(--s-7) var(--s-5); text-transform: none; letter-spacing: 0; font: inherit; }
-.colophon { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-5); margin: 0; }
+.colophon { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--s-5); margin: 0; }
 .colophon dt { margin-bottom: var(--s-1); color: var(--accent-text); font: 500 var(--step--2) / 1.4 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; }
 .colophon dd { display: grid; gap: 2px; margin: 0; color: var(--text-muted); font-size: var(--step--1); line-height: 1.5; }
 .site-footer-bar {

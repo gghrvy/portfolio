@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import localFont from 'next/font/local'
 import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google'
 import { BackToTop } from '@/components/BackToTop'
+import { CommandPalette } from '@/components/CommandPalette'
 import { MotionOrchestrator } from '@/components/MotionOrchestrator'
 import { Toaster } from '@/components/Toaster'
 import { siteUrl } from '@/lib/site-url'
@@ -59,6 +60,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <MotionOrchestrator>{children}</MotionOrchestrator>
         <BackToTop />
         <Toaster />
+        <CommandPalette />
       </body>
     </html>
   )

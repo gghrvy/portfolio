@@ -19,6 +19,34 @@ export function applyTheme(theme: Theme, source: ThemeSource) {
   window.dispatchEvent(new CustomEvent('themechange', { detail: { theme, source } }))
 }
 
+// Flips the theme with a circular View Transition reveal from `origin` (viewport centre if omitted),
+// a crossfade where View Transitions are unsupported, and an instant swap under reduced motion.
+export function switchTheme(origin?: { x: number; y: number }) {
+  const root = document.documentElement
+  const next: Theme = root.dataset.theme === 'light' ? 'dark' : 'light'
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { applyTheme(next, 'manual'); return }
+
+  if (!document.startViewTransition) {
+    root.classList.add('theme-fade')
+    applyTheme(next, 'manual')
+    window.setTimeout(() => root.classList.remove('theme-fade'), 320)
+    return
+  }
+
+  const x = origin?.x ?? window.innerWidth / 2
+  const y = origin?.y ?? window.innerHeight / 2
+  const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y))
+  root.classList.add('theme-vt')
+  const transition = document.startViewTransition(() => flushSync(() => applyTheme(next, 'manual')))
+  transition.ready.then(() => {
+    root.animate(
+      { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+      { duration: 480, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', pseudoElement: '::view-transition-new(root)' },
+    )
+  })
+  transition.finished.finally(() => root.classList.remove('theme-vt'))
+}
+
 export function ThemeToggle() {
   const button = useRef<HTMLButtonElement>(null)
   const [theme, setTheme] = useState<Theme | null>(null)
@@ -35,31 +63,8 @@ export function ThemeToggle() {
   }, [])
 
   const toggle = () => {
-    const root = document.documentElement
-    const next: Theme = root.dataset.theme === 'light' ? 'dark' : 'light'
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduced) { applyTheme(next, 'manual'); return }
-
-    if (!document.startViewTransition) {
-      root.classList.add('theme-fade')
-      applyTheme(next, 'manual')
-      window.setTimeout(() => root.classList.remove('theme-fade'), 320)
-      return
-    }
-
     const rect = button.current!.getBoundingClientRect()
-    const x = rect.left + rect.width / 2
-    const y = rect.top + rect.height / 2
-    const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y))
-    root.classList.add('theme-vt')
-    const transition = document.startViewTransition(() => flushSync(() => applyTheme(next, 'manual')))
-    transition.ready.then(() => {
-      root.animate(
-        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
-        { duration: 480, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', pseudoElement: '::view-transition-new(root)' },
-      )
-    })
-    transition.finished.finally(() => root.classList.remove('theme-vt'))
+    switchTheme({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 })
   }
 
   return (

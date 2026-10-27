@@ -10,3 +10,5 @@
 @import '../styles/sections/timeline.css';
 @import '../styles/sections/contact.css';
 @import '../styles/sections/not-found.css';
+@import '../styles/sections/palette.css';
+@import '../styles/print.css';

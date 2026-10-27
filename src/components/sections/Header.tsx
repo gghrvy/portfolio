@@ -1,4 +1,5 @@
 import { ArrowUpRight } from 'lucide-react'
+import { CommandButton } from '@/components/CommandPalette'
 import { MobileMenu } from '@/components/MobileMenu'
 import { Monogram } from '@/components/Monogram'
 import { ThemeToggle } from '@/components/ThemeToggle'
@@ -26,6 +27,7 @@ export function Header() {
         </nav>
         <div className="header-actions">
           <a className="header-resume" href={contact.resume} target="_blank" rel="noreferrer">Resume <ArrowUpRight size={14} aria-hidden="true" /><span className="visually-hidden"> (PDF, opens in a new tab)</span></a>
+          <CommandButton />
           <ThemeToggle />
           <MobileMenu links={navLinks} />
         </div>

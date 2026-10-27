@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { ArrowDown } from 'lucide-react'
+import { AriaDemo } from '@/components/work/AriaDemo'
 import { AriaVisual } from '@/components/work/AriaVisual'
 import { NodeLabel, TextLink } from '@/components/ui'
 import { CaseStudy, NextProject } from '@/components/work/CaseStudy'
@@ -71,9 +72,7 @@ export function Work() {
             </div>
             <div className="aria-visual island-dark">
               <AriaVisual />
-              <ol className="aria-example" aria-label="Example Aria interaction">
-                {aria.example.map((step) => <li key={step.label}><span>{step.label}</span><strong>{step.text}</strong></li>)}
-              </ol>
+              <AriaDemo />
             </div>
           </div>
           <NextProject next={{ id: 'about', label: 'Continue', name: 'About Harvy' }} />
