@@ -10,27 +10,32 @@ The single source of truth for the portfolio's visual and motion language. Code 
 
 **Forbidden:** bounce or elastic easing, parallax drift, one fade-up for everything, blur-in, purple/blue gradients, glass cards, emoji, scale(0), and animating anything other than `transform`/`opacity`. The one exception is SVG `stroke-dashoffset` for graph draws.
 
-## Color
-| Token | Hex | Use | Contrast on bg |
-|---|---|---|---|
-| `--c-bg` | `#0C0E0D` | page ground | — |
-| `--c-panel` | `#141716` | raised panels, plates | — |
-| `--c-panel-2` | `#1B1F1D` | hover fill, chips | — |
-| `--c-line` | `#262B29` | hairlines | non-text |
-| `--c-line-strong` | `#3A413D` | rules that need presence | non-text |
-| `--c-text` | `#E7E9E2` | primary text | 15.8:1 |
-| `--c-muted` | `#8E958F` | secondary text | 6.3:1 |
-| `--c-faint` | `#6B726C` | decorative / non-text only | 3.9:1 |
-| `--c-signal` | `#F0A33A` | the single accent: indices, active state, focus | 9.2:1 |
-| `--c-live` | `#5CCF9F` | live/available state only | 10.0:1 |
-| `--c-plate-light` | `#E4E6DF` | backdrop for light-UI screenshots | — |
+## Color (semantic, two themes)
+`data-theme` on `<html>` is set before first paint by a blocking head script. It uses the stored manual choice if there is one, otherwise the OS `prefers-color-scheme`, otherwise dark. `.island-dark` re-scopes the dark tokens inside the light theme; the Aria portrait panel uses it.
 
-Text on amber uses `--c-bg` (9.2:1).
+| Token | Dark | Light | Role |
+|---|---|---|---|
+| `--bg` | `#0C0E0D` | `#F3EEE4` (warm paper) | page ground |
+| `--surface` / `--surface-2` | `#141716` / `#1B1F1D` | `#EBE5D8` / `#E2DBCC` | panels, hover fills |
+| `--border` | `#262B29` | `#D3CBBB` | hairlines (decorative) |
+| `--border-strong` | `#646C67` (3.6:1) | `#7D7566` (3.9:1) | component edges (≥3:1, WCAG 1.4.11) |
+| `--text` | `#E7E9E2` (15.8:1) | `#1A1B19` (15.0:1) | primary text |
+| `--text-muted` | `#8E958F` (6.3:1) | `#5A5A52` (6.0:1) | secondary text, AA on every surface |
+| `--text-faint` | `#6B726C` | `#8C877A` | decorative / aria-hidden only |
+| `--accent-text` | `#F0A33A` | `#A3420B` (5.4:1) | accent text, selected indicators |
+| `--accent` / `--trace` | `#F0A33A` | `#E28A23` | large graphics only: trace, rails, canvas, outline numerals |
+| `--accent-fill` / `--accent-contrast` | `#F0A33A` / `#0C0E0D` | `#A3420B` / `#FBF8F1` | primary button, selection |
+| `--focus` | `#F0A33A` | `#A3420B` | focus rings |
+| `--live` | `#5CCF9F` | `#1E7D52` | availability state only |
+| `--plate` / `--shadow-plate` | `#141716` / none | `#1B1D1C` ink bezel / soft drop | screenshot frames, so dark app UIs sit well on paper |
+
+No component uses raw hex. The only literals are in `tokens.css`, the OG and icon renderers (which can't read CSS), and the Aria WebGL scene.
 
 ## Type
 - Display: **Clash Grotesk** (variable 200–700, self-hosted, FFL licence in `src/fonts/FFL.txt`). Weight 500–600, tracking −0.03em, line-height 0.92–1.05.
 - Body: **IBM Plex Sans** 400/500/600, line-height 1.6.
-- Mono: **IBM Plex Mono** 400/500, uppercase labels at +0.06em tracking.
+- Mono: **IBM Plex Mono** 400/500, uppercase labels at +0.06em tracking, 12px minimum.
+- Body copy is 16px minimum (`--step-0`), line-height 1.5–1.6, and capped at `--measure` (68ch).
 - Fluid scale from 360px to 1440px: `--step--2` 11px fixed (mono labels) … `--step-6` 48→120px (hero name).
 
 ## Space, radii, borders
