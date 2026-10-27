@@ -53,3 +53,9 @@
   .tl-item { grid-template-columns: minmax(0, 1fr); gap: var(--s-2); }
   .tl-meta { display: flex; flex-wrap: wrap; gap: var(--s-3); }
 }
+
+/* Rail fill is scrubbed by GSAP; nodes light as the fill passes them. */
+html:not(.motion) .tl-rail i { transform: none; }
+.tl-node { transition: background-color var(--d-base) var(--ease-signal), box-shadow var(--d-slow) var(--ease-signal), border-color var(--d-base) var(--ease-signal); }
+.tl-item.is-lit .tl-node, html:not(.motion) .tl-item .tl-node { border-color: var(--c-signal); background: var(--c-signal); }
+.tl-item.is-lit .tl-node { box-shadow: var(--glow-signal); }

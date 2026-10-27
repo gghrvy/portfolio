@@ -1,5 +1,6 @@
 import { ArrowUp, ArrowUpRight } from 'lucide-react'
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6'
+import { CopyEmail } from '@/components/CopyEmail'
 import { NodeLabel, TextLink } from '@/components/ui'
 import { availability, closing, contact } from '@/content/profile'
 
@@ -10,12 +11,15 @@ export function Contact() {
         <NodeLabel index="05">Contact</NodeLabel>
         <h2 id="contact-title">{closing.heading}</h2>
         <p className="contact-body">{closing.body}</p>
-        <div className="contact-cta">
-          <a className="contact-email" href={`mailto:${contact.email}`}>
+        <div className="contact-cta" data-observe>
+          <a className="contact-email" href={`mailto:${contact.email}`} data-magnetic>
             <span>{contact.email}</span>
             <ArrowUpRight aria-hidden="true" />
           </a>
-          <a className="contact-phone link" href={contact.phoneHref}><span className="link-text">{contact.phone}</span></a>
+          <div className="contact-actions">
+            <CopyEmail email={contact.email} />
+            <a className="contact-phone link" href={contact.phoneHref}><span className="link-text">{contact.phone}</span></a>
+          </div>
           <p className="contact-direct">{closing.direct}</p>
         </div>
         <div className="contact-availability">

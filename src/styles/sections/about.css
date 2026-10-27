@@ -42,3 +42,12 @@
   .about-facts { grid-template-columns: minmax(0, 1fr); }
   .about-facts div { padding: var(--s-3) 0; border-bottom: 1px solid var(--c-line); }
 }
+
+/* Shutter lifts off the portrait; the quote rule grows down. */
+.about-portrait::after { content: ''; position: absolute; inset: 0; background: var(--c-panel-2); transform: scaleY(0); transform-origin: top; }
+.motion .about-portrait::after { transform: scaleY(1); transition: transform var(--d-reveal) var(--ease-route) 100ms; }
+.motion .about-grid[data-inview] .about-portrait::after { transform: scaleY(0); }
+.pull-quote { position: relative; border-left-color: var(--c-line); }
+.pull-quote::before { content: ''; position: absolute; top: 0; bottom: 0; left: -2px; width: 2px; background: var(--c-signal); transform-origin: top; }
+.motion .pull-quote::before { transform: scaleY(0); transition: transform var(--d-reveal) var(--ease-signal) 500ms; }
+.motion .about-grid[data-inview] .pull-quote::before { transform: scaleY(1); }

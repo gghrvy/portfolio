@@ -14,7 +14,7 @@ export function About() {
   const [first, second] = about.paragraphs
   return (
     <section className="about" id="about" aria-labelledby="about-title">
-      <div className="wrap about-grid">
+      <div className="wrap about-grid" data-observe>
         <NodeLabel index="02">About</NodeLabel>
         <figure className="about-portrait">
           <Image src="/harvy-profile.jpg" alt="Harvy H. Monte de Ramos" fill sizes="(max-width: 900px) 100vw, 30vw" />

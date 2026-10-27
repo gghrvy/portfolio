@@ -56,3 +56,20 @@
   .contact-grid { grid-template-columns: minmax(0, 1fr); gap: var(--s-5); }
   .contact h2, .contact-body, .contact-availability, .contact-profiles { grid-column: auto; }
 }
+
+.contact-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-4); }
+.copy-email[data-state='copied'] { border-color: var(--c-live); }
+.copy-email[data-state='copied'] svg { color: var(--c-live); }
+.contact-email { position: relative; }
+.contact-email::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -6px;
+  left: 0;
+  height: 2px;
+  background: var(--c-signal);
+  transform-origin: left;
+}
+.motion .contact-cta .contact-email::after { transform: scaleX(0); transition: transform var(--d-reveal) var(--ease-route) 200ms; }
+.motion .contact-cta[data-inview] .contact-email::after { transform: scaleX(1); }
