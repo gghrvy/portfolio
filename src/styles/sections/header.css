@@ -22,8 +22,8 @@
   transition: color var(--d-fast) var(--ease-signal);
 }
 .site-nav a span { color: var(--c-faint); transition: color var(--d-fast) var(--ease-signal); }
-.site-nav a:hover, .site-nav a[aria-current='true'] { color: var(--c-text); }
-.site-nav a:hover span, .site-nav a[aria-current='true'] span { color: var(--c-signal); }
+.site-nav a:hover, .site-nav a[aria-current] { color: var(--c-text); }
+.site-nav a:hover span, .site-nav a[aria-current] span { color: var(--c-signal); }
 
 .header-resume {
   display: inline-flex;
@@ -91,3 +91,7 @@
   .site-nav, .header-resume { display: none; }
   .mobile-menu { display: block; }
 }
+
+/* Hides on scroll down, returns on scroll up. Transform only. */
+.site-header { transition: transform var(--d-base) var(--ease-route); }
+.site-header[data-hidden='true'] { transform: translateY(-100%); transition-timing-function: var(--ease-exit); }
