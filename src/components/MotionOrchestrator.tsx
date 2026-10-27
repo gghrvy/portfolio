@@ -1,6 +1,28 @@
 'use client'
 
 import { useEffect } from 'react'
+import { Cursor } from '@/components/motion/Cursor'
+import { setLenis } from '@/lib/scroll'
+
+declare global { interface Window { __motionReady?: boolean } }
+
+const prefersReduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+// Marks [data-observe] elements once they enter; each section's CSS decides what that reveal looks like.
+function useRevealObserver() {
+  useEffect(() => {
+    window.__motionReady = true
+    const io = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue
+        ;(entry.target as HTMLElement).dataset.inview = 'true'
+        io.unobserve(entry.target)
+      }
+    }, { rootMargin: '0px 0px -12% 0px' })
+    document.querySelectorAll('[data-observe]').forEach((element) => io.observe(element))
+    return () => io.disconnect()
+  }, [])
+}
 
 function useHeaderBehaviour() {
   useEffect(() => {
@@ -35,7 +57,10 @@ function useHeaderBehaviour() {
           if (link.getAttribute('href') === hash) link.setAttribute('aria-current', 'location')
           else link.removeAttribute('aria-current')
         }
-        document.documentElement.dataset.section = entry.target.id
+        document.querySelectorAll(`.scroll-trace [data-node]`).forEach((node) => {
+          const element = node as HTMLElement
+          element.dataset.lit = String(sections.findIndex((s) => s.id === element.dataset.node) <= sections.indexOf(entry.target as HTMLElement))
+        })
       }
     }, { rootMargin: '-45% 0px -50% 0px' })
     sections.forEach((section) => spy.observe(section))
@@ -45,26 +70,78 @@ function useHeaderBehaviour() {
   }, [])
 }
 
-declare global { interface Window { __motionReady?: boolean } }
-
-// Marks [data-observe] elements once they enter; each section's CSS decides what that reveal looks like.
-function useRevealObserver() {
+// Lenis smooth scroll (fine pointers only) and the GSAP-scrubbed timeline rail. Loaded after hydration.
+function useScrollSystems() {
   useEffect(() => {
-    window.__motionReady = true
-    const io = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue
-        ;(entry.target as HTMLElement).dataset.inview = 'true'
-        io.unobserve(entry.target)
+    if (prefersReduced()) return
+    let cancelled = false
+    let cleanup = () => {}
+
+    Promise.all([import('gsap'), import('gsap/ScrollTrigger'), import('lenis')]).then(([{ gsap }, { ScrollTrigger }, { default: Lenis }]) => {
+      if (cancelled) return
+      gsap.registerPlugin(ScrollTrigger)
+
+      const smooth = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+      const lenis = smooth ? new Lenis({ autoRaf: false, anchors: { offset: -72 }, lerp: 0.12 }) : null
+      const raf = (time: number) => lenis?.raf(time * 1000)
+      if (lenis) {
+        setLenis(lenis)
+        lenis.on('scroll', ScrollTrigger.update)
+        gsap.ticker.add(raf)
+        gsap.ticker.lagSmoothing(0)
       }
-    }, { rootMargin: '0px 0px -12% 0px' })
-    document.querySelectorAll('[data-observe]').forEach((element) => io.observe(element))
-    return () => io.disconnect()
+
+      const context = gsap.context(() => {
+        const track = document.querySelector<HTMLElement>('.tl-track')
+        const fill = track?.querySelector('.tl-rail i')
+        if (!track || !fill) return
+        gsap.fromTo(fill, { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: track, start: 'top 60%', end: 'bottom 60%', scrub: true } })
+        track.querySelectorAll<HTMLElement>('.tl-item').forEach((item) => {
+          ScrollTrigger.create({ trigger: item, start: 'top 60%', onEnter: () => item.classList.add('is-lit'), onLeaveBack: () => item.classList.remove('is-lit') })
+        })
+      })
+
+      cleanup = () => {
+        context.revert()
+        gsap.ticker.remove(raf)
+        lenis?.destroy()
+        setLenis(null)
+      }
+    })
+
+    return () => { cancelled = true; cleanup() }
+  }, [])
+}
+
+// [data-magnetic] elements lean toward the pointer (max 6px), transform only.
+function useMagnetic() {
+  useEffect(() => {
+    if (prefersReduced() || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    const elements = [...document.querySelectorAll<HTMLElement>('[data-magnetic]')]
+    const handlers = elements.map((element) => {
+      const move = (event: PointerEvent) => {
+        const rect = element.getBoundingClientRect()
+        const x = ((event.clientX - rect.left) / rect.width - 0.5) * 12
+        const y = ((event.clientY - rect.top) / rect.height - 0.5) * 12
+        element.style.transition = 'transform var(--d-fast) var(--ease-signal)'
+        element.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`
+      }
+      const leave = () => {
+        element.style.transition = 'transform var(--d-slow) var(--ease-route)'
+        element.style.transform = ''
+      }
+      element.addEventListener('pointermove', move)
+      element.addEventListener('pointerleave', leave)
+      return () => { element.removeEventListener('pointermove', move); element.removeEventListener('pointerleave', leave) }
+    })
+    return () => handlers.forEach((remove) => remove())
   }, [])
 }
 
 export function MotionOrchestrator({ children }: { children: React.ReactNode }) {
   useRevealObserver()
   useHeaderBehaviour()
-  return children
+  useScrollSystems()
+  useMagnetic()
+  return <>{children}<Cursor /></>
 }

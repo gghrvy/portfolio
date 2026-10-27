@@ -243,7 +243,7 @@
   background: var(--c-signal);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 900ms var(--ease-route);
+  transition: transform var(--d-reveal) var(--ease-route);
 }
 .motion .pipeline[data-inview]::after { transform: scaleX(1); }
 .motion .pipeline-step > span { opacity: 0.3; transition: opacity var(--d-slow) var(--ease-signal); transition-delay: calc(var(--i) * 200ms + 120ms); }

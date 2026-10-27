@@ -1,0 +1,78 @@
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: clip; }
+
+/* Cursor: a trailing diamond, fine pointers only */
+.cursor { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 300;
+    display: block;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--d-fast) var(--ease-signal);
+  }
+  .cursor[data-visible='true'] { opacity: 1; }
+  .cursor span {
+    display: block;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 1px solid var(--c-signal);
+    opacity: 0.6;
+    transform: rotate(45deg);
+    transition: transform var(--d-base) var(--ease-signal), opacity var(--d-fast) var(--ease-signal), background-color var(--d-fast) var(--ease-signal);
+  }
+  .cursor[data-active='true'] span { opacity: 1; background: var(--c-signal-dim); transform: rotate(45deg) scale(1.75); }
+  .cursor[data-pressed='true'] span { transform: rotate(45deg) scale(0.8); }
+}
+
+/* Margin trace (wide screens only) */
+.scroll-trace { display: none; }
+@media (min-width: 1440px) {
+  .scroll-trace {
+    position: fixed;
+    top: 96px;
+    bottom: 32px;
+    left: calc((100vw - var(--wrap)) / 4);
+    z-index: 40;
+    display: block;
+    width: 1px;
+    background: var(--c-line);
+    pointer-events: none;
+  }
+  .scroll-trace-fill { position: absolute; inset: 0; background: var(--c-signal); transform: scaleY(0); transform-origin: top; }
+  @supports (animation-timeline: scroll()) {
+    .scroll-trace-fill { animation: trace-fill linear both; animation-timeline: scroll(root); }
+  }
+  .scroll-trace-node {
+    position: absolute;
+    top: var(--p);
+    left: -4px;
+    width: 9px;
+    height: 9px;
+    border: 1px solid var(--c-line-strong);
+    background: var(--c-bg);
+    transform: rotate(45deg);
+    transition: border-color var(--d-base) var(--ease-signal), background-color var(--d-base) var(--ease-signal);
+  }
+  .scroll-trace-node i {
+    position: absolute;
+    top: -2px;
+    left: 14px;
+    color: var(--c-faint);
+    font: 500 10px / 1 var(--f-mono);
+    font-style: normal;
+    transform: rotate(-45deg);
+    transform-origin: left top;
+    transition: color var(--d-base) var(--ease-signal);
+  }
+  .scroll-trace-node[data-lit='true'] { border-color: var(--c-signal); background: var(--c-signal); }
+  .scroll-trace-node[data-lit='true'] i { color: var(--c-signal); }
+}
+@keyframes trace-fill { to { transform: scaleY(1); } }
