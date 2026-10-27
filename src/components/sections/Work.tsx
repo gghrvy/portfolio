@@ -1,7 +1,9 @@
+import Image from 'next/image'
 import { ArrowDown } from 'lucide-react'
 import { AriaVisual } from '@/components/work/AriaVisual'
 import { NodeLabel, TextLink } from '@/components/ui'
 import { CaseStudy, NextProject } from '@/components/work/CaseStudy'
+import { IndexPreview, type PreviewShot } from '@/components/work/IndexPreview'
 import { Pipeline } from '@/components/work/Pipeline'
 import { contact } from '@/content/profile'
 import { aria, projects, workIntro } from '@/content/projects'
@@ -10,6 +12,12 @@ const index = [
   ...projects.map((project) => ({ id: project.id, index: project.index, name: project.name, kicker: project.kicker, role: project.role, outcome: project.outcome, stack: project.stack.slice(0, 3) })),
   { id: 'aria', index: '04', name: 'Aria', kicker: aria.label, role: aria.role, outcome: aria.outcome, stack: aria.stack.slice(0, 3) },
 ]
+
+const previews: PreviewShot[] = [
+  ...projects.map((project) => ({ id: project.id, src: project.shots[0].src, width: project.shots[0].width, height: project.shots[0].height, tone: project.tone })),
+  { id: 'aria', src: '/aria-presence-source.png', width: 1254, height: 1254, tone: 'dark' as const },
+]
+const previewFor = (id: string) => previews.find((shot) => shot.id === id)!
 
 export function Work() {
   return (
@@ -26,6 +34,7 @@ export function Work() {
             <li key={item.id} style={{ '--i': i } as React.CSSProperties}>
               <a href={`#${item.id}`}>
                 <span className="work-index-num">{item.index}</span>
+                <span className="work-index-thumb" data-tone={previewFor(item.id).tone} aria-hidden="true"><Image src={previewFor(item.id).src} alt="" width={previewFor(item.id).width} height={previewFor(item.id).height} sizes="96px" /></span>
                 <span className="work-index-title">
                   <span className="work-index-name">{item.name}</span>
                   <span className="work-index-kicker">{item.kicker}</span>
@@ -37,6 +46,7 @@ export function Work() {
             </li>
           ))}
         </ol>
+        <IndexPreview shots={previews} />
       </div>
 
       {projects.map((project, i) => {

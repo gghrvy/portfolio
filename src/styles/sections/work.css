@@ -276,7 +276,7 @@
 .case-meta-strip div + div { padding-left: var(--s-4); border-left: 1px solid var(--border); }
 .case-meta-strip dt { color: var(--accent-text); font: 500 var(--step--2) / 1.4 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; }
 .case-meta-strip dd { margin: 0; font-size: var(--step-0); line-height: 1.4; }
-.case-note .case-note-lead { color: var(--text); font-size: var(--step-1); line-height: 1.4; }
+.case-note > p.case-note-lead { color: var(--text); font-size: var(--step-1); line-height: 1.4; }
 .case-note > p:not(.case-label) { max-width: var(--measure); }
 
 /* Next project: a full-width exit so no case study is a dead end */
@@ -305,4 +305,85 @@
   .work-index a > svg { grid-column: 3; grid-row: 1; }
   .case-meta-strip { grid-template-columns: minmax(0, 1fr); }
   .case-meta-strip div + div { padding-left: 0; border-top: 1px solid var(--border); border-left: 0; }
+}
+
+/* Ambient pipeline: after the draw, one packet keeps looping through the steps; each step glows as it passes.
+   Hover or focus pauses the loop. Transform/opacity only; never runs without the motion class. */
+.pipeline { --cycle: 7s; }
+.pipeline-step::after { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--accent-dim); opacity: 0; pointer-events: none; }
+.pipeline-step { isolation: isolate; }
+.pipeline-lane { position: absolute; top: -4px; right: 0; left: 0; height: 9px; overflow: hidden; pointer-events: none; }
+.pipeline-runner { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.pipeline-runner::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: -7px;
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent), -14px 0 0 -2px var(--accent-dim);
+}
+.motion .pipeline[data-inview] .pipeline-runner { animation: pipeline-run var(--cycle) linear calc(var(--d-reveal) + 800ms) infinite both; }
+.motion .pipeline[data-inview] .pipeline-step::after {
+  animation: pipeline-glow var(--cycle) linear infinite both;
+  animation-delay: calc(var(--d-reveal) + 800ms + var(--cycle) * var(--i) / var(--n));
+}
+.pipeline:hover .pipeline-runner, .pipeline:hover .pipeline-step::after,
+.pipeline:focus-within .pipeline-runner, .pipeline:focus-within .pipeline-step::after { animation-play-state: paused; }
+@keyframes pipeline-run { from { transform: translateX(0); } to { transform: translateX(calc(100% + 7px)); } }
+@keyframes pipeline-glow { 0% { opacity: 0; } 3% { opacity: 1; } 18% { opacity: 0.6; } 25%, 100% { opacity: 0; } }
+
+@media (max-width: 900px) {
+  .pipeline-lane { top: 0; right: auto; bottom: 0; left: -4px; width: 9px; height: auto; }
+  .pipeline-runner::before { top: -7px; left: 1px; box-shadow: 0 0 10px var(--accent), 0 -14px 0 -2px var(--accent-dim); }
+  @keyframes pipeline-run { from { transform: translateY(0); } to { transform: translateY(calc(100% + 7px)); } }
+}
+@media (prefers-reduced-motion: reduce) { .pipeline-lane { display: none; } }
+
+/* Index previews: floating frame on fine pointers, inline thumbnail on touch */
+.work-index-thumb { display: none; }
+.index-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 70;
+  width: 320px;
+  aspect-ratio: 16 / 10;
+  pointer-events: none;
+}
+.index-preview-shot {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  padding: 6px;
+  border: 1px solid var(--plate-border);
+  border-radius: var(--r-1);
+  background: var(--plate);
+  box-shadow: var(--shadow-plate), 0 20px 40px -24px rgb(0 0 0 / 0.6);
+  opacity: 0;
+  transform: scale(0.96) rotate(-1.5deg);
+  transition: opacity var(--d-fast) var(--ease-exit), transform var(--d-base) var(--ease-signal);
+}
+.index-preview-shot[data-tone='light'] { border-color: var(--border-strong); background: var(--plate-light); }
+.index-preview-shot img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.index-preview[data-visible='true'] .index-preview-shot[data-active='true'] { opacity: 1; transform: none; transition-timing-function: var(--ease-signal); transition-duration: var(--d-base); }
+
+@media (hover: none), (pointer: coarse) {
+  .work-index a { grid-template-columns: 28px 56px minmax(0, 1fr) 16px; column-gap: var(--s-3); }
+  .work-index-thumb {
+    display: block;
+    grid-row: 1 / span 3;
+    grid-column: 2;
+    align-self: start;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--plate-border);
+    border-radius: var(--r-1);
+    background: var(--plate);
+  }
+  .work-index-thumb[data-tone='light'] { background: var(--plate-light); border-color: var(--border-strong); }
+  .work-index-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+  .work-index-title, .work-index-outcome, .work-index-meta { grid-column: 3; }
+  .work-index a > svg { grid-column: 4; }
 }

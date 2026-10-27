@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { Cursor } from '@/components/motion/Cursor'
-import { whenIntent } from '@/lib/idle'
+import { whenIdle, whenIntent } from '@/lib/idle'
 import { setLenis } from '@/lib/scroll'
 
 declare global { interface Window { __motionReady?: boolean } }
@@ -50,9 +50,16 @@ function useHeaderBehaviour() {
     const sections = links
       .map((link) => document.querySelector<HTMLElement>(link.getAttribute('href') ?? ''))
       .filter((section, index, all): section is HTMLElement => !!section && all.indexOf(section) === index)
+    let current: Element | null = null
     const spy = new IntersectionObserver((entries) => {
       for (const entry of entries) {
-        if (!entry.isIntersecting) continue
+        if (!entry.isIntersecting || entry.target === current) continue
+        current = entry.target
+        const label = entry.target.querySelector<HTMLElement>('.node-label')
+        if (label && document.documentElement.classList.contains('motion')) {
+          label.dataset.arriving = 'true'
+          window.setTimeout(() => { delete label.dataset.arriving }, 1200)
+        }
         const hash = `#${entry.target.id}`
         for (const link of links) {
           if (link.getAttribute('href') === hash) link.setAttribute('aria-current', 'location')
@@ -68,6 +75,50 @@ function useHeaderBehaviour() {
 
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => { window.removeEventListener('scroll', onScroll); spy.disconnect() }
+  }, [])
+}
+
+// Packets travel down the filled part of the margin trace and pulse the head on arrival (wide screens only).
+function useTracePackets() {
+  useEffect(() => {
+    const trace = document.querySelector<HTMLElement>('.scroll-trace')
+    const wide = window.matchMedia('(min-width: 1440px)')
+    if (!trace || prefersReduced()) return
+    const packets = [...trace.querySelectorAll<HTMLElement>('.scroll-trace-packet')]
+    const head = trace.querySelector<HTMLElement>('.scroll-trace-head')
+    const state = packets.map((_, i) => ({ y: -i * 90, speed: 150 + i * 35 }))
+    let frame = 0
+    let last = 0
+    let height = 0
+    let max = 1
+
+    const measure = () => { height = trace.clientHeight; max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight) }
+    const tick = (time: number) => {
+      const dt = Math.min((time - (last || time)) / 1000, 0.1)
+      last = time
+      const reach = (window.scrollY / max) * height
+      if (head) head.style.transform = `translateY(${reach.toFixed(1)}px)`
+      packets.forEach((packet, i) => {
+        const p = state[i]
+        p.y += p.speed * dt
+        if (p.y >= reach) {
+          if (reach > 24 && head) head.dataset.pulse = head.dataset.pulse === 'a' ? 'b' : 'a'
+          p.y = -40 - i * 60
+        }
+        packet.style.opacity = reach > 24 && p.y > 0 ? '1' : '0'
+        packet.style.transform = `translateY(${Math.max(p.y, 0).toFixed(1)}px)`
+      })
+      frame = requestAnimationFrame(tick)
+    }
+    const start = () => { if (!frame && wide.matches && !document.hidden) { measure(); last = 0; frame = requestAnimationFrame(tick) } }
+    const stop = () => { cancelAnimationFrame(frame); frame = 0 }
+    const sync = () => { stop(); start() }
+
+    const cancel = whenIdle(start)
+    window.addEventListener('resize', measure)
+    wide.addEventListener('change', sync)
+    document.addEventListener('visibilitychange', sync)
+    return () => { cancel(); stop(); window.removeEventListener('resize', measure); wide.removeEventListener('change', sync); document.removeEventListener('visibilitychange', sync) }
   }, [])
 }
 
@@ -144,6 +195,7 @@ export function MotionOrchestrator({ children }: { children: React.ReactNode }) 
   useRevealObserver()
   useHeaderBehaviour()
   useTimelineNodes()
+  useTracePackets()
   useScrollSystems()
   useMagnetic()
   return <>{children}<Cursor /></>
