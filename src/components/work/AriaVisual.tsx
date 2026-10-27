@@ -1,10 +1,11 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 
 function Poster() {
-  return <div className="aria-presence" aria-hidden="true"><img src="/aria-presence-source.png" alt="" /></div>
+  return <div className="aria-presence" aria-hidden="true"><Image src="/aria-presence-source.png" alt="" width={1254} height={1254} sizes="(max-width: 900px) 90vw, 410px" /></div>
 }
 
 const AriaPresence = dynamic(() => import('@/components/AriaPresence').then((mod) => mod.AriaPresence), { ssr: false, loading: Poster })

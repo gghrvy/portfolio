@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { gsap } from 'gsap'
@@ -86,5 +87,5 @@ function Fallback() { return <div className="aria-fallback" aria-hidden="true"><
 
 export function AriaPresence({ active = true }: { active?: boolean }) {
   const compact = useMedia('(max-width: 780px), (pointer: coarse)'), reduced = useMedia('(prefers-reduced-motion: reduce)')
-  return <div className="aria-presence" aria-hidden="true"><img src="/aria-presence-source.png" alt="" /><Canvas className="aria-particle-overlay" dpr={compact ? [1, 1.25] : [1, 1.5]} frameloop={reduced ? 'demand' : active ? 'always' : 'never'} camera={{ position: [0, 0, 5.7], fov: 29, near: .1, far: 20 }} gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }} onCreated={({ gl }) => gl.setClearColor(0x000000, 0)} fallback={<Fallback />}><Scene compact={compact} reduced={reduced} /></Canvas></div>
+  return <div className="aria-presence" aria-hidden="true"><Image src="/aria-presence-source.png" alt="" width={1254} height={1254} sizes="(max-width: 900px) 90vw, 410px" /><Canvas className="aria-particle-overlay" dpr={compact ? [1, 1.25] : [1, 1.5]} frameloop={reduced ? 'demand' : active ? 'always' : 'never'} camera={{ position: [0, 0, 5.7], fov: 29, near: .1, far: 20 }} gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }} onCreated={({ gl }) => gl.setClearColor(0x000000, 0)} fallback={<Fallback />}><Scene compact={compact} reduced={reduced} /></Canvas></div>
 }

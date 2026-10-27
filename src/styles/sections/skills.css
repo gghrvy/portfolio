@@ -34,7 +34,7 @@
 .skill-tab[aria-selected='true'] { background: var(--c-bg); }
 .skill-tab[aria-selected='true']::before { transform: scaleY(1); }
 .skill-tab:focus-visible { outline-offset: -3px; }
-.skill-tab-index { grid-row: span 2; color: var(--c-faint); font: 500 var(--step--2) / 1.6 var(--f-mono); transition: color var(--d-fast) var(--ease-signal); }
+.skill-tab-index { grid-row: span 2; color: var(--c-muted); font: 500 var(--step--2) / 1.6 var(--f-mono); transition: color var(--d-fast) var(--ease-signal); }
 .skill-tab[aria-selected='true'] .skill-tab-index { color: var(--c-signal); }
 .skill-tab-title { font: 500 var(--step-1) / 1.15 var(--f-display); letter-spacing: -0.015em; }
 .skill-tab-count { color: var(--c-muted); font: 400 var(--step--2) / 1.4 var(--f-mono); letter-spacing: 0.04em; text-transform: uppercase; }

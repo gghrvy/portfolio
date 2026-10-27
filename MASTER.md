@@ -57,6 +57,8 @@ Rules:
 3. Every section owns one reveal type, and none of them repeats.
 4. Under `prefers-reduced-motion: reduce`, all durations collapse, canvases render one static frame, smooth scroll is off and the content is fully visible.
 5. Canvas and WebGL pause when off-screen or when the tab is hidden.
+6. Nothing heavy competes with first paint. The hero reveal is pure CSS, and its lines start partly visible so LCP is never deferred. The packet field starts on idle after `load` and runs at 30fps on touch. The Aria WebGL and the framer-motion gallery mount near the viewport, rendering identical static markup until then. Lenis loads on first intent and only for fine pointers. GSAP loads only where CSS `view()` timelines are unsupported.
+7. Text never animates below AA contrast. Reveals move lines, rules and fills, not the opacity of readable copy.
 
 ## Components
 - **Button / primary:** amber fill, carbon text, `--r-1`, 48px tall, magnetic.

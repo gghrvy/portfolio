@@ -1,7 +1,7 @@
 import { ArrowUpRight } from 'lucide-react'
 import { FaGithub } from 'react-icons/fa6'
 import { Chips } from '@/components/ui'
-import { Gallery } from '@/components/work/Gallery'
+import { GalleryShell } from '@/components/work/GalleryShell'
 import { Pipeline } from '@/components/work/Pipeline'
 import { contact } from '@/content/profile'
 import type { Project } from '@/content/projects'
@@ -26,7 +26,7 @@ export function CaseStudy({ project, flip }: { project: Project; flip: boolean }
         <Pipeline steps={project.flow} label={`${project.name} pipeline`} />
 
         <div className="case-body">
-          <Gallery id={project.id} shots={project.shots} tone={project.tone} name={project.name} />
+          <GalleryShell id={project.id} shots={project.shots} tone={project.tone} name={project.name} />
           <div className="case-notes">
             <section className="case-note" aria-label="Approach">
               <p className="case-label">Approach <span>/ {project.approach.label}</span></p>

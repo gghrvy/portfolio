@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { Cursor } from '@/components/motion/Cursor'
+import { whenIntent } from '@/lib/idle'
 import { setLenis } from '@/lib/scroll'
 
 declare global { interface Window { __motionReady?: boolean } }
@@ -36,7 +37,7 @@ function useHeaderBehaviour() {
       ticking = true
       requestAnimationFrame(() => {
         const y = window.scrollY
-        const menuOpen = header.querySelector('.mobile-menu-panel:not([hidden])')
+        const menuOpen = header.querySelector('.mobile-menu-panel[data-open="true"]')
         const hide = y > 160 && y > lastY + 4 && !menuOpen && !header.contains(document.activeElement)
         if (hide) header.dataset.hidden = 'true'
         else if (y < lastY - 4 || y <= 160) header.dataset.hidden = 'false'
@@ -70,46 +71,47 @@ function useHeaderBehaviour() {
   }, [])
 }
 
-// Lenis smooth scroll (fine pointers only) and the GSAP-scrubbed timeline rail. Loaded after hydration.
+// Timeline nodes light once their top crosses 60% of the viewport, and unlight when scrolled back above it.
+function useTimelineNodes() {
+  useEffect(() => {
+    const items = document.querySelectorAll<HTMLElement>('.tl-item')
+    const io = new IntersectionObserver((entries) => {
+      for (const entry of entries) entry.target.classList.toggle('is-lit', entry.boundingClientRect.top < window.innerHeight * 0.6)
+    }, { rootMargin: '0px 0px -40% 0px' })
+    items.forEach((item) => io.observe(item))
+    return () => io.disconnect()
+  }, [])
+}
+
+// Lenis for fine pointers on first intent. GSAP only scrubs the timeline rail where CSS view timelines are missing.
 function useScrollSystems() {
   useEffect(() => {
     if (prefersReduced()) return
+    const smooth = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    const railFallback = !CSS.supports('animation-timeline: view()')
+    if (!smooth && !railFallback) return
     let cancelled = false
     let cleanup = () => {}
 
-    Promise.all([import('gsap'), import('gsap/ScrollTrigger'), import('lenis')]).then(([{ gsap }, { ScrollTrigger }, { default: Lenis }]) => {
-      if (cancelled) return
+    const cancelIntent = whenIntent(async () => {
+      const lenis = smooth ? new (await import('lenis')).default({ autoRaf: true, anchors: { offset: -72 }, lerp: 0.12 }) : null
+      if (cancelled) { lenis?.destroy(); return }
+      setLenis(lenis)
+      if (!railFallback) { cleanup = () => { lenis?.destroy(); setLenis(null) }; return }
+
+      const [{ gsap }, { ScrollTrigger }] = await Promise.all([import('gsap'), import('gsap/ScrollTrigger')])
+      if (cancelled) { lenis?.destroy(); return }
       gsap.registerPlugin(ScrollTrigger)
-
-      const smooth = window.matchMedia('(hover: hover) and (pointer: fine)').matches
-      const lenis = smooth ? new Lenis({ autoRaf: false, anchors: { offset: -72 }, lerp: 0.12 }) : null
-      const raf = (time: number) => lenis?.raf(time * 1000)
-      if (lenis) {
-        setLenis(lenis)
-        lenis.on('scroll', ScrollTrigger.update)
-        gsap.ticker.add(raf)
-        gsap.ticker.lagSmoothing(0)
-      }
-
+      lenis?.on('scroll', ScrollTrigger.update)
       const context = gsap.context(() => {
         const track = document.querySelector<HTMLElement>('.tl-track')
         const fill = track?.querySelector('.tl-rail i')
-        if (!track || !fill) return
-        gsap.fromTo(fill, { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: track, start: 'top 60%', end: 'bottom 60%', scrub: true } })
-        track.querySelectorAll<HTMLElement>('.tl-item').forEach((item) => {
-          ScrollTrigger.create({ trigger: item, start: 'top 60%', onEnter: () => item.classList.add('is-lit'), onLeaveBack: () => item.classList.remove('is-lit') })
-        })
+        if (track && fill) gsap.fromTo(fill, { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: track, start: 'top 60%', end: 'bottom 60%', scrub: true } })
       })
+      cleanup = () => { context.revert(); lenis?.destroy(); setLenis(null) }
+    }, railFallback ? 4000 : undefined)
 
-      cleanup = () => {
-        context.revert()
-        gsap.ticker.remove(raf)
-        lenis?.destroy()
-        setLenis(null)
-      }
-    })
-
-    return () => { cancelled = true; cleanup() }
+    return () => { cancelled = true; cancelIntent(); cleanup() }
   }, [])
 }
 
@@ -141,6 +143,7 @@ function useMagnetic() {
 export function MotionOrchestrator({ children }: { children: React.ReactNode }) {
   useRevealObserver()
   useHeaderBehaviour()
+  useTimelineNodes()
   useScrollSystems()
   useMagnetic()
   return <>{children}<Cursor /></>

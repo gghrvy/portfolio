@@ -54,8 +54,14 @@
   .tl-meta { display: flex; flex-wrap: wrap; gap: var(--s-3); }
 }
 
-/* Rail fill is scrubbed by GSAP; nodes light as the fill passes them. */
+/* Nodes light as the rail passes them (IntersectionObserver in MotionOrchestrator). */
 html:not(.motion) .tl-rail i { transform: none; }
 .tl-node { transition: background-color var(--d-base) var(--ease-signal), box-shadow var(--d-slow) var(--ease-signal), border-color var(--d-base) var(--ease-signal); }
 .tl-item.is-lit .tl-node, html:not(.motion) .tl-item .tl-node { border-color: var(--c-signal); background: var(--c-signal); }
 .tl-item.is-lit .tl-node { box-shadow: var(--glow-signal); }
+/* Native scrub: a zero-height "line" at 60% of the viewport; the rail fills as the track crosses it. */
+@supports (animation-timeline: view()) {
+  .motion .tl-track { view-timeline: --tl block; view-timeline-inset: 60% 40%; }
+  .motion .tl-rail i { animation: rail-fill linear both; animation-timeline: --tl; animation-range: cover 0% cover 100%; }
+}
+@keyframes rail-fill { from { transform: scaleY(0); } to { transform: scaleY(1); } }

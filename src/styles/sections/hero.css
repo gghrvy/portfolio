@@ -76,8 +76,9 @@
 .mask-line > span { animation: hero-line var(--d-reveal) var(--ease-signal) both; animation-delay: calc(140ms + var(--i, 0) * 70ms); }
 [data-reveal='hero'] { animation: hero-rise 520ms var(--ease-signal) both; animation-delay: calc(340ms + var(--i, 0) * 60ms); }
 @keyframes hero-fade { from { opacity: 0; } }
-@keyframes hero-line { from { transform: translateY(105%); } }
-@keyframes hero-rise { from { opacity: 0; transform: translateY(10px); } }
+/* Lines start partly visible so the LCP paint is never deferred behind the mask. */
+@keyframes hero-line { from { transform: translateY(58%); } }
+@keyframes hero-rise { from { opacity: 0.06; transform: translateY(10px); } }
 @media (prefers-reduced-motion: reduce) {
   .hero-field, .mask-line > span, [data-reveal='hero'] { animation: none; }
 }

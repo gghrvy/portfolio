@@ -26,7 +26,7 @@ export function MobileMenu({ links }: { links: readonly Link[] }) {
         {open ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
         <span>{open ? 'Close' : 'Menu'}</span>
       </button>
-      <div className="mobile-menu-panel" id="mobile-navigation" data-open={open} hidden={!open}>
+      <div className="mobile-menu-panel" id="mobile-navigation" data-open={open}>
         <nav aria-label="Mobile navigation">
           {links.map((link, index) => (
             <a href={link.href} key={link.href} onClick={() => setOpen(false)}>

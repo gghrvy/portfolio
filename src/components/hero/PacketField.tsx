@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { whenIdle } from '@/lib/idle'
 
 type Node = { x: number; y: number; links: number[]; heat: number }
 type Packet = { from: number; to: number; s: number; speed: number }
@@ -87,6 +88,8 @@ export default function PacketField() {
     let last = 0
     let born = 0
     let visible = true
+    let started = false
+    const frameBudget = coarse ? 1000 / 30 : 0
 
     function nextHop(packet: Packet) {
       const node = nodes[packet.to]
@@ -207,6 +210,7 @@ export default function PacketField() {
     }
 
     function loop(time: number) {
+      if (frameBudget && last && time - last < frameBudget) { frame = requestAnimationFrame(loop); return }
       if (!born) born = time
       const dt = Math.min((time - (last || time)) / 1000, 0.1)
       last = time
@@ -215,12 +219,12 @@ export default function PacketField() {
       frame = requestAnimationFrame(loop)
     }
 
-    function start() { if (!frame && visible && !document.hidden && !reduced) { last = 0; frame = requestAnimationFrame(loop) } }
+    function start() { if (started && !frame && visible && !document.hidden && !reduced) { last = 0; frame = requestAnimationFrame(loop) } }
     function stop() { cancelAnimationFrame(frame); frame = 0 }
 
     layout()
-    if (reduced) render(1)
-    else start()
+    render(reduced ? 1 : 0)
+    const cancelIdle = whenIdle(() => { started = true; start() })
 
     const resize = new ResizeObserver(() => { layout(); if (reduced) render(1) })
     resize.observe(canvas)
@@ -239,6 +243,7 @@ export default function PacketField() {
     document.documentElement.addEventListener('pointerleave', onLeave)
 
     return () => {
+      cancelIdle()
       stop()
       resize.disconnect()
       io.disconnect()

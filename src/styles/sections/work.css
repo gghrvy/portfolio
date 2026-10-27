@@ -246,9 +246,7 @@
   transition: transform var(--d-reveal) var(--ease-route);
 }
 .motion .pipeline[data-inview]::after { transform: scaleX(1); }
-.motion .pipeline-step > span { opacity: 0.3; transition: opacity var(--d-slow) var(--ease-signal); transition-delay: calc(var(--i) * 200ms + 120ms); }
 .motion .pipeline-step::before { transition: background-color var(--d-fast) var(--ease-signal), box-shadow var(--d-slow) var(--ease-signal); transition-delay: calc(var(--i) * 200ms); }
-.motion .pipeline[data-inview] .pipeline-step > span { opacity: 1; }
 .motion .pipeline[data-inview] .pipeline-step::before { background: var(--c-signal); }
 
 .motion .work-index li { opacity: 0; transform: translateX(-12px); transition: opacity var(--d-slow) var(--ease-signal), transform var(--d-slow) var(--ease-signal); transition-delay: calc(var(--i) * 70ms); }

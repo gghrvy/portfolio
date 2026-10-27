@@ -15,9 +15,10 @@ const enterSlow = { duration: 0.42, ease: signal }
 const enterBase = { duration: 0.24, ease: signal }
 const leave = { duration: 0.18, ease: exit }
 
-type Props = { id: string; shots: Shot[]; tone: 'dark' | 'light'; name: string }
+export type GalleryProps = { id: string; shots: Shot[]; name: string }
 
-export function Gallery({ id, shots, tone, name }: Props) {
+// Interactive layer, loaded by GalleryShell only when the gallery nears the viewport.
+export default function InteractiveGallery({ id, shots, name }: GalleryProps) {
   const [active, setActive] = useState(0)
   const [direction, setDirection] = useState(1)
   const [open, setOpen] = useState(false)
@@ -37,7 +38,7 @@ export function Gallery({ id, shots, tone, name }: Props) {
   return (
     <LazyMotion features={loadFeatures} strict>
       <MotionConfig reducedMotion="user">
-        <div className="gallery" data-tone={tone} data-observe>
+        <>
           <figure className="gallery-main">
             <div className="plate gallery-stage" style={{ aspectRatio: ratio }}>
               {!open && (
@@ -77,7 +78,7 @@ export function Gallery({ id, shots, tone, name }: Props) {
             </AnimatePresence>,
             document.body,
           )}
-        </div>
+        </>
       </MotionConfig>
     </LazyMotion>
   )
