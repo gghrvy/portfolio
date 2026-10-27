@@ -84,7 +84,7 @@ function Scene({ compact, reduced }: { compact: boolean; reduced: boolean }) {
 function useMedia(query: string) { const [matches, setMatches] = useState(false); useEffect(() => { const media = window.matchMedia(query), update = () => setMatches(media.matches); update(); media.addEventListener('change', update); return () => media.removeEventListener('change', update) }, [query]); return matches }
 function Fallback() { return <div className="aria-fallback" aria-hidden="true"><span /><span /><span /><span /><span /></div> }
 
-export function AriaPresence() {
+export function AriaPresence({ active = true }: { active?: boolean }) {
   const compact = useMedia('(max-width: 780px), (pointer: coarse)'), reduced = useMedia('(prefers-reduced-motion: reduce)')
-  return <div className="aria-presence" aria-hidden="true"><img src="/aria-presence-source.png" alt="" /><Canvas className="aria-particle-overlay" dpr={compact ? [1, 1.25] : [1, 1.5]} frameloop={reduced ? 'demand' : 'always'} camera={{ position: [0, 0, 5.7], fov: 29, near: .1, far: 20 }} gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }} onCreated={({ gl }) => gl.setClearColor(0x000000, 0)} fallback={<Fallback />}><Scene compact={compact} reduced={reduced} /></Canvas></div>
+  return <div className="aria-presence" aria-hidden="true"><img src="/aria-presence-source.png" alt="" /><Canvas className="aria-particle-overlay" dpr={compact ? [1, 1.25] : [1, 1.5]} frameloop={reduced ? 'demand' : active ? 'always' : 'never'} camera={{ position: [0, 0, 5.7], fov: 29, near: .1, far: 20 }} gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }} onCreated={({ gl }) => gl.setClearColor(0x000000, 0)} fallback={<Fallback />}><Scene compact={compact} reduced={reduced} /></Canvas></div>
 }

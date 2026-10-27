@@ -45,7 +45,26 @@ function useHeaderBehaviour() {
   }, [])
 }
 
+declare global { interface Window { __motionReady?: boolean } }
+
+// Marks [data-observe] elements once they enter; each section's CSS decides what that reveal looks like.
+function useRevealObserver() {
+  useEffect(() => {
+    window.__motionReady = true
+    const io = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue
+        ;(entry.target as HTMLElement).dataset.inview = 'true'
+        io.unobserve(entry.target)
+      }
+    }, { rootMargin: '0px 0px -12% 0px' })
+    document.querySelectorAll('[data-observe]').forEach((element) => io.observe(element))
+    return () => io.disconnect()
+  }, [])
+}
+
 export function MotionOrchestrator({ children }: { children: React.ReactNode }) {
+  useRevealObserver()
   useHeaderBehaviour()
   return children
 }

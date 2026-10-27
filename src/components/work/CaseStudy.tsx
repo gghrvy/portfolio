@@ -6,12 +6,12 @@ import { Pipeline } from '@/components/work/Pipeline'
 import { contact } from '@/content/profile'
 import type { Project } from '@/content/projects'
 
-export function CaseStudy({ project, flip, priority }: { project: Project; flip: boolean; priority: boolean }) {
+export function CaseStudy({ project, flip }: { project: Project; flip: boolean }) {
   const titleId = `${project.id}-title`
   return (
     <article className="case" id={project.id} data-flip={flip} aria-labelledby={titleId}>
       <div className="wrap">
-        <header className="case-head">
+        <header className="case-head" data-observe>
           <span className="case-index" aria-hidden="true">{project.index}</span>
           <div className="case-title">
             <p className="case-kicker">{project.kicker}</p>
@@ -26,7 +26,7 @@ export function CaseStudy({ project, flip, priority }: { project: Project; flip:
         <Pipeline steps={project.flow} label={`${project.name} pipeline`} />
 
         <div className="case-body">
-          <Gallery shots={project.shots} tone={project.tone} name={project.name} priority={priority} />
+          <Gallery id={project.id} shots={project.shots} tone={project.tone} name={project.name} />
           <div className="case-notes">
             <section className="case-note" aria-label="Approach">
               <p className="case-label">Approach <span>/ {project.approach.label}</span></p>

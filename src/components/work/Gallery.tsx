@@ -1,28 +1,139 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
+import { AnimatePresence, LazyMotion, MotionConfig, m } from 'framer-motion'
+import { ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import type { Shot } from '@/content/projects'
+import { lockScroll, unlockScroll } from '@/lib/scroll'
 
-export function Gallery({ shots, tone, name, priority = false }: { shots: Shot[]; tone: 'dark' | 'light'; name: string; priority?: boolean }) {
+const loadFeatures = () => import('./motion-features').then((mod) => mod.default)
+const signal = [0.2, 0, 0, 1] as const
+const exit = [0.4, 0, 1, 1] as const
+const enterSlow = { duration: 0.42, ease: signal }
+const enterBase = { duration: 0.24, ease: signal }
+const leave = { duration: 0.18, ease: exit }
+
+type Props = { id: string; shots: Shot[]; tone: 'dark' | 'light'; name: string }
+
+export function Gallery({ id, shots, tone, name }: Props) {
   const [active, setActive] = useState(0)
+  const [direction, setDirection] = useState(1)
+  const [open, setOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const expandRef = useRef<HTMLButtonElement>(null)
   const main = shots[active]
+  const ratio = `${shots[0].width} / ${shots[0].height}`
+
+  useEffect(() => setMounted(true), [])
+
+  const show = (index: number) => {
+    const next = (index + shots.length) % shots.length
+    setDirection(next > active || (active === shots.length - 1 && next === 0) ? 1 : -1)
+    setActive(next)
+  }
 
   return (
-    <div className="gallery" data-tone={tone}>
-      <figure className="gallery-main">
-        <div className="plate">
-          <Image src={main.src} alt={main.alt} width={main.width} height={main.height} sizes="(max-width: 900px) 100vw, 62vw" priority={priority} />
+    <LazyMotion features={loadFeatures} strict>
+      <MotionConfig reducedMotion="user">
+        <div className="gallery" data-tone={tone} data-observe>
+          <figure className="gallery-main">
+            <div className="plate gallery-stage" style={{ aspectRatio: ratio }}>
+              {!open && (
+                <m.div className="gallery-frame" layoutId={`${id}-shot`} transition={enterSlow}>
+                  <AnimatePresence initial={false} mode="popLayout" custom={direction}>
+                    <m.div
+                      key={main.src}
+                      className="gallery-image"
+                      initial={{ opacity: 0, x: 28 * direction }}
+                      animate={{ opacity: 1, x: 0, transition: enterBase }}
+                      exit={{ opacity: 0, x: -16 * direction, transition: leave }}
+                    >
+                      <Image src={main.src} alt={main.alt} width={main.width} height={main.height} sizes="(max-width: 900px) 100vw, 62vw" />
+                    </m.div>
+                  </AnimatePresence>
+                </m.div>
+              )}
+              <button ref={expandRef} type="button" className="gallery-expand" onClick={() => setOpen(true)} aria-label={`Expand ${main.label}`} aria-haspopup="dialog">
+                <Maximize2 size={15} aria-hidden="true" /><span>Expand</span>
+              </button>
+            </div>
+            <figcaption aria-live="polite"><span>{main.label}</span><p>{main.note}</p></figcaption>
+          </figure>
+
+          <div className="gallery-thumbs" role="group" aria-label={`${name} screens`}>
+            {shots.map((shot, index) => (
+              <button key={shot.src} type="button" className="gallery-thumb plate" aria-pressed={index === active} aria-label={`Show ${shot.label}`} onClick={() => show(index)}>
+                <Image src={shot.src} alt="" width={shot.width} height={shot.height} sizes="(max-width: 900px) 33vw, 20vw" />
+                {index === active && <m.span className="gallery-thumb-indicator" layoutId={`${id}-indicator`} transition={enterBase} aria-hidden="true" />}
+              </button>
+            ))}
+          </div>
+
+          {mounted && createPortal(
+            <AnimatePresence onExitComplete={() => expandRef.current?.focus()}>
+              {open && <Lightbox key="lightbox" id={id} name={name} shots={shots} active={active} onShow={show} onClose={() => setOpen(false)} />}
+            </AnimatePresence>,
+            document.body,
+          )}
         </div>
-        <figcaption><span>{main.label}</span><p>{main.note}</p></figcaption>
-      </figure>
-      <div className="gallery-thumbs" role="group" aria-label={`${name} screens`}>
-        {shots.map((shot, index) => (
-          <button key={shot.src} type="button" className="gallery-thumb plate" aria-pressed={index === active} aria-label={`Show ${shot.label}`} onClick={() => setActive(index)}>
-            <Image src={shot.src} alt="" width={shot.width} height={shot.height} sizes="(max-width: 900px) 33vw, 20vw" />
-          </button>
-        ))}
+      </MotionConfig>
+    </LazyMotion>
+  )
+}
+
+function Lightbox({ id, name, shots, active, onShow, onClose }: { id: string; name: string; shots: Shot[]; active: number; onShow: (index: number) => void; onClose: () => void }) {
+  const dialog = useRef<HTMLDivElement>(null)
+  const closeRef = useRef<HTMLButtonElement>(null)
+  const shot = shots[active]
+
+  useEffect(() => {
+    lockScroll()
+    closeRef.current?.focus()
+    return () => unlockScroll()
+  }, [])
+
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Escape') { event.preventDefault(); onClose() }
+    if (event.key === 'ArrowRight') onShow(active + 1)
+    if (event.key === 'ArrowLeft') onShow(active - 1)
+    if (event.key !== 'Tab' || !dialog.current) return
+    const focusable = [...dialog.current.querySelectorAll<HTMLElement>('button')]
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus() }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus() }
+  }
+
+  return (
+    <m.div
+      ref={dialog}
+      className="lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${name} screens`}
+      onKeyDown={onKeyDown}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1, transition: enterBase }}
+      exit={{ opacity: 0, transition: leave }}
+    >
+      <div className="lightbox-bar">
+        <p><span>{String(active + 1).padStart(2, '0')} / {String(shots.length).padStart(2, '0')}</span> {shot.label}</p>
+        <button ref={closeRef} type="button" className="lightbox-button" onClick={onClose} aria-label="Close"><X size={18} aria-hidden="true" /></button>
       </div>
-    </div>
+      <div className="lightbox-stage" onClick={(event) => { if (event.target === event.currentTarget) onClose() }}>
+        <m.div className="lightbox-frame" layoutId={`${id}-shot`} transition={enterSlow}>
+          <Image src={shot.src} alt={shot.alt} width={shot.width} height={shot.height} sizes="100vw" />
+        </m.div>
+      </div>
+      <div className="lightbox-foot">
+        <p>{shot.note}</p>
+        <div>
+          <button type="button" className="lightbox-button" onClick={() => onShow(active - 1)} aria-label="Previous screen"><ChevronLeft size={18} aria-hidden="true" /></button>
+          <button type="button" className="lightbox-button" onClick={() => onShow(active + 1)} aria-label="Next screen"><ChevronRight size={18} aria-hidden="true" /></button>
+        </div>
+      </div>
+    </m.div>
   )
 }

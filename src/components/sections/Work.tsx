@@ -1,5 +1,5 @@
 import { ArrowDown } from 'lucide-react'
-import { AriaPresence } from '@/components/AriaPresence'
+import { AriaVisual } from '@/components/work/AriaVisual'
 import { NodeLabel, TextLink } from '@/components/ui'
 import { CaseStudy } from '@/components/work/CaseStudy'
 import { Pipeline } from '@/components/work/Pipeline'
@@ -18,9 +18,9 @@ export function Work() {
           <p>{workIntro.body}</p>
           <TextLink href={`mailto:${contact.email}`}>{workIntro.demo}</TextLink>
         </div>
-        <ol className="work-index" aria-label="Projects">
-          {index.map((item) => (
-            <li key={item.id}>
+        <ol className="work-index" aria-label="Projects" data-observe>
+          {index.map((item, i) => (
+            <li key={item.id} style={{ '--i': i } as React.CSSProperties}>
               <a href={`#${item.id}`}>
                 <span className="work-index-num">{item.index}</span>
                 <span className="work-index-name">{item.name}</span>
@@ -32,7 +32,7 @@ export function Work() {
         </ol>
       </div>
 
-      {projects.map((project, i) => <CaseStudy key={project.id} project={project} flip={i % 2 === 1} priority={false} />)}
+      {projects.map((project, i) => <CaseStudy key={project.id} project={project} flip={i % 2 === 1} />)}
 
       <article className="aria" id="aria" aria-labelledby="aria-title">
         <div className="wrap aria-grid">
@@ -48,7 +48,7 @@ export function Work() {
             <p className="aria-footnote">{aria.footnote}</p>
           </div>
           <div className="aria-visual">
-            <AriaPresence />
+            <AriaVisual />
             <ol className="aria-example" aria-label="Example Aria interaction">
               {aria.example.map((step) => <li key={step.label}><span>{step.label}</span><strong>{step.text}</strong></li>)}
             </ol>

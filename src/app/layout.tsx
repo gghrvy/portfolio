@@ -22,6 +22,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: '#0c0e0d', colorScheme: 'dark' }
 
+// Opt into reveal states before first paint; fall back to static content if hydration never lands.
+const motionScript = "(function(){try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;var d=document.documentElement;d.classList.add('motion');setTimeout(function(){if(!window.__motionReady)d.classList.remove('motion')},4000)}catch(e){}})()"
+
 const structuredData = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -32,8 +35,9 @@ const structuredData = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`} suppressHydrationWarning>
       <body>
+        <script dangerouslySetInnerHTML={{ __html: motionScript }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }} />
         <a className="skip-link" href="#work">Skip to work</a>
         <MotionOrchestrator>{children}</MotionOrchestrator>
