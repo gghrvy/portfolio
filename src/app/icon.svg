@@ -1,1 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Harvy Monte de Ramos"><rect width="64" height="64" rx="14" fill="#172326"/><path fill="#f6f5f0" d="M13 12h10v15h18V12h10v40H41V37H23v15H13z"/><circle cx="51" cy="51" r="5" fill="#de6742"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Harvy Monte de Ramos">
+  <style>
+    .bg { fill: #0c0e0d; } .ink { fill: #e7e9e2; } .dot { fill: #f0a33a; }
+    @media (prefers-color-scheme: light) { .bg { fill: #f3eee4; } .ink { fill: #1a1b19; } .dot { fill: #a3420b; } }
+  </style>
+  <rect class="bg" width="64" height="64" rx="10"/>
+  <path class="ink" d="M12 14h7v14h12V14h7v36h-7V35H19v15h-7z"/>
+  <circle class="dot" cx="50" cy="46" r="4.5"/>
+</svg>

@@ -23,12 +23,12 @@ html.lenis, html.lenis body { height: auto; }
     width: 16px;
     height: 16px;
     margin: -8px 0 0 -8px;
-    border: 1px solid var(--c-signal);
+    border: 1px solid var(--accent-text);
     opacity: 0.6;
     transform: rotate(45deg);
     transition: transform var(--d-base) var(--ease-signal), opacity var(--d-fast) var(--ease-signal), background-color var(--d-fast) var(--ease-signal);
   }
-  .cursor[data-active='true'] span { opacity: 1; background: var(--c-signal-dim); transform: rotate(45deg) scale(1.75); }
+  .cursor[data-active='true'] span { opacity: 1; background: var(--accent-dim); transform: rotate(45deg) scale(1.75); }
   .cursor[data-pressed='true'] span { transform: rotate(45deg) scale(0.8); }
 }
 
@@ -43,10 +43,10 @@ html.lenis, html.lenis body { height: auto; }
     z-index: 40;
     display: block;
     width: 1px;
-    background: var(--c-line);
+    background: var(--border);
     pointer-events: none;
   }
-  .scroll-trace-fill { position: absolute; inset: 0; background: var(--c-signal); transform: scaleY(0); transform-origin: top; }
+  .scroll-trace-fill { position: absolute; inset: 0; background: var(--trace); transform: scaleY(0); transform-origin: top; }
   @supports (animation-timeline: scroll()) {
     .scroll-trace-fill { animation: trace-fill linear both; animation-timeline: scroll(root); }
   }
@@ -56,8 +56,8 @@ html.lenis, html.lenis body { height: auto; }
     left: -4px;
     width: 9px;
     height: 9px;
-    border: 1px solid var(--c-line-strong);
-    background: var(--c-bg);
+    border: 1px solid var(--border-strong);
+    background: var(--bg);
     transform: rotate(45deg);
     transition: border-color var(--d-base) var(--ease-signal), background-color var(--d-base) var(--ease-signal);
   }
@@ -65,14 +65,17 @@ html.lenis, html.lenis body { height: auto; }
     position: absolute;
     top: -2px;
     left: 14px;
-    color: var(--c-faint);
+    color: var(--text-faint);
     font: 500 10px / 1 var(--f-mono);
     font-style: normal;
     transform: rotate(-45deg);
     transform-origin: left top;
     transition: color var(--d-base) var(--ease-signal);
   }
-  .scroll-trace-node[data-lit='true'] { border-color: var(--c-signal); background: var(--c-signal); }
-  .scroll-trace-node[data-lit='true'] i { color: var(--c-signal); }
+  .scroll-trace-node[data-lit="true"] { border-color: var(--trace); background: var(--trace); }
+  .scroll-trace-node[data-lit='true'] i { color: var(--accent-text); }
 }
 @keyframes trace-fill { to { transform: scaleY(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .scroll-trace-fill { animation: none !important; transform: scaleY(0); }
+}

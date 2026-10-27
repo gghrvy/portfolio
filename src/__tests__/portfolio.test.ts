@@ -25,8 +25,18 @@ describe('portfolio content', () => {
     expect(aria.heading).toBe('Meet Aria.')
   })
 
-  it('puts the name in the hero', () => {
+  it('answers the recruiter scan in the hero', () => {
     expect(hero.name.join(' ')).toBe('Harvy Monte de Ramos')
+    expect(hero.role).toMatch(/Frontend/)
+    expect(hero.timezone).toBe('UTC+8')
+  })
+
+  it('gives every case study a role, problem and outcome', () => {
+    for (const project of projects) {
+      expect(project.role.length).toBeGreaterThan(0)
+      expect(project.problem.length).toBeGreaterThan(0)
+      expect(project.outcome.length).toBeGreaterThan(0)
+    }
   })
 
   it('keeps every skill group, role and credential', () => {

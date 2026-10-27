@@ -1,7 +1,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-  background: var(--c-bg);
+  background: var(--bg);
   color-scheme: dark;
   scroll-padding-top: 80px;
   -webkit-text-size-adjust: 100%;
@@ -10,8 +10,8 @@ html {
 body {
   margin: 0;
   overflow-x: clip;
-  background: var(--c-bg);
-  color: var(--c-text);
+  background: var(--bg);
+  color: var(--text);
   font: 400 var(--step-0) / 1.6 var(--f-body);
   -webkit-font-smoothing: antialiased;
 }
@@ -32,10 +32,10 @@ h1, h2, h3, h4 {
   text-wrap: balance;
 }
 
-::selection { background: var(--c-signal); color: var(--c-bg); }
+::selection { background: var(--accent-fill); color: var(--accent-contrast); }
 
 :focus-visible {
-  outline: 2px solid var(--c-signal);
+  outline: 2px solid var(--focus);
   outline-offset: 3px;
 }
 
@@ -46,12 +46,15 @@ h1, h2, h3, h4 {
 
 .skip-link {
   position: fixed;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
   top: var(--s-3);
   left: var(--s-3);
   z-index: 200;
   padding: var(--s-2) var(--s-4);
-  background: var(--c-signal);
-  color: var(--c-bg);
+  background: var(--accent-fill);
+  color: var(--accent-contrast);
   font: 500 var(--step--1) / 1.4 var(--f-mono);
   transform: translateY(-200%);
 }
@@ -78,4 +81,14 @@ h1, h2, h3, h4 {
 /* Touch devices skip Lenis; anchors still glide. */
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
+}
+
+/* Inherited color is resolved on the parent, so islands re-declare it. */
+.island-dark { color: var(--text); }
+
+/* Theme switch: circular reveal is driven from JS; disable the default root crossfade. */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+.theme-vt .skill-panel[data-active='true'] { view-transition-name: none; }
+.theme-fade, .theme-fade *, .theme-fade *::before, .theme-fade *::after {
+  transition: background-color var(--d-base) var(--ease-route), color var(--d-base) var(--ease-route), border-color var(--d-base) var(--ease-route) !important;
 }

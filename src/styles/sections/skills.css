@@ -1,11 +1,11 @@
-.skills { padding-block: var(--s-10); border-top: 1px solid var(--c-line); background: var(--c-panel); }
+.skills { padding-block: var(--s-10); border-top: 1px solid var(--border); background: var(--surface); }
 .skills-head { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: var(--s-5) var(--s-7); margin-bottom: var(--s-8); }
 .skills-head h2 { margin-bottom: var(--s-4); font-size: var(--step-5); }
-.skills-head p { max-width: 56ch; color: var(--c-muted); }
+.skills-head p { max-width: 56ch; color: var(--text-muted); }
 
 /* Routing board: tabs on the left, one panel on the right. Panels share a grid cell so height never shifts. */
-.skill-board { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); border: 1px solid var(--c-line); }
-.skill-tabs { display: grid; align-content: start; border-right: 1px solid var(--c-line); }
+.skill-board { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); border: 1px solid var(--border); }
+.skill-tabs { display: grid; align-content: start; border-right: 1px solid var(--border); }
 .skill-tab {
   position: relative;
   display: grid;
@@ -13,7 +13,7 @@
   gap: 4px var(--s-3);
   padding: var(--s-5);
   border: 0;
-  border-bottom: 1px solid var(--c-line);
+  border-bottom: 1px solid var(--border);
   background: transparent;
   text-align: left;
   cursor: pointer;
@@ -26,34 +26,34 @@
   bottom: 0;
   left: -1px;
   width: 2px;
-  background: var(--c-signal);
+  background: var(--accent-text);
   transform: scaleY(0);
   transition: transform var(--d-base) var(--ease-route);
 }
-.skill-tab:hover { background: var(--c-panel-2); }
-.skill-tab[aria-selected='true'] { background: var(--c-bg); }
+.skill-tab:hover { background: var(--surface-2); }
+.skill-tab[aria-selected='true'] { background: var(--bg); }
 .skill-tab[aria-selected='true']::before { transform: scaleY(1); }
 .skill-tab:focus-visible { outline-offset: -3px; }
-.skill-tab-index { grid-row: span 2; color: var(--c-muted); font: 500 var(--step--2) / 1.6 var(--f-mono); transition: color var(--d-fast) var(--ease-signal); }
-.skill-tab[aria-selected='true'] .skill-tab-index { color: var(--c-signal); }
+.skill-tab-index { grid-row: span 2; color: var(--text-muted); font: 500 var(--step--2) / 1.6 var(--f-mono); transition: color var(--d-fast) var(--ease-signal); }
+.skill-tab[aria-selected='true'] .skill-tab-index { color: var(--accent-text); }
 .skill-tab-title { font: 500 var(--step-1) / 1.15 var(--f-display); letter-spacing: -0.015em; }
-.skill-tab-count { color: var(--c-muted); font: 400 var(--step--2) / 1.4 var(--f-mono); letter-spacing: 0.04em; text-transform: uppercase; }
+.skill-tab-count { color: var(--text-muted); font: 400 var(--step--2) / 1.4 var(--f-mono); letter-spacing: 0.04em; text-transform: uppercase; }
 
-.skill-panels { display: grid; background: var(--c-bg); }
+.skill-panels { display: grid; background: var(--bg); }
 .skill-panel { grid-area: 1 / 1; padding: var(--s-7); }
 .skill-panel[data-active='false'] { visibility: hidden; }
 .skill-panel[data-active='true'] { view-transition-name: skill-panel; }
 .skill-panel h3 { display: flex; align-items: baseline; gap: var(--s-3); margin-bottom: var(--s-6); font-size: var(--step-3); }
-.skill-panel h3 span { color: var(--c-signal); font: 500 var(--step--1) / 1 var(--f-mono); letter-spacing: 0; }
+.skill-panel h3 span { color: var(--accent-text); font: 500 var(--step--1) / 1 var(--f-mono); letter-spacing: 0; }
 .skill-chips { display: flex; flex-wrap: wrap; gap: var(--s-2); margin: 0; padding: 0; list-style: none; }
 .skill-chips li {
   padding: var(--s-2) var(--s-3);
-  border: 1px solid var(--c-line-strong);
+  border: 1px solid var(--border-strong);
   border-radius: var(--r-1);
   font: 400 var(--step--1) / 1.3 var(--f-mono);
   transition: border-color var(--d-fast) var(--ease-signal), color var(--d-fast) var(--ease-signal);
 }
-.skill-chips li:hover { border-color: var(--c-signal); color: var(--c-signal); }
+.skill-chips li:hover { border-color: var(--accent-text); color: var(--accent-text); }
 
 /* Chip cascade on reveal and on every tab switch */
 .motion .skill-board:not([data-inview]) .skill-chips li { opacity: 0; }
@@ -68,7 +68,7 @@
   .skills { padding-block: var(--s-9); }
   .skills-head, .skill-board { grid-template-columns: minmax(0, 1fr); }
   .skill-tabs { display: none; }
-  .skill-panel { grid-area: auto; padding: var(--s-5) var(--s-4); border-bottom: 1px solid var(--c-line); }
+  .skill-panel { grid-area: auto; padding: var(--s-5) var(--s-4); border-bottom: 1px solid var(--border); }
   .skill-panel[data-active='false'] { visibility: visible; }
   .skill-panel h3 { margin-bottom: var(--s-4); font-size: var(--step-2); }
   .skill-chips li { font-size: var(--step--2); }

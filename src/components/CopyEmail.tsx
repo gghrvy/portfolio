@@ -2,32 +2,31 @@
 
 import { Check, Copy } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { toast } from '@/lib/toast'
 
 export function CopyEmail({ email }: { email: string }) {
-  const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle')
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
-    if (state === 'idle') return
-    const timer = setTimeout(() => setState('idle'), 2200)
+    if (!copied) return
+    const timer = setTimeout(() => setCopied(false), 2200)
     return () => clearTimeout(timer)
-  }, [state])
+  }, [copied])
 
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(email)
-      setState('copied')
+      setCopied(true)
+      toast(`Copied ${email}`)
     } catch {
-      setState('failed')
+      toast('Couldn’t copy. Select the address and copy it instead.', 'error')
     }
   }
 
   return (
-    <>
-      <button type="button" className="button button-ghost button-sm copy-email" onClick={copy} data-state={state}>
-        {state === 'copied' ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
-        {state === 'copied' ? 'Copied' : 'Copy email'}
-      </button>
-      <span className="visually-hidden" role="status">{state === 'copied' ? 'Email address copied to clipboard' : state === 'failed' ? 'Copy failed, select the address instead' : ''}</span>
-    </>
+    <button type="button" className="button button-ghost button-sm copy-email" onClick={copy} data-state={copied ? 'copied' : 'idle'}>
+      {copied ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+      {copied ? 'Copied' : 'Copy email'}
+    </button>
   )
 }

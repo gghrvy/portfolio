@@ -3,12 +3,12 @@
   display: flex;
   min-height: calc(100svh - 65px);
   overflow: hidden;
-  border-bottom: 1px solid var(--c-line);
+  border-bottom: 1px solid var(--border);
 }
 .hero-field {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(var(--c-line-strong) 1px, transparent 1px);
+  background-image: radial-gradient(var(--border-strong) 1px, transparent 1px);
   background-size: 32px 32px;
   mask-image: radial-gradient(ellipse 62% 58% at 76% 30%, #000 15%, transparent 78%);
 }
@@ -29,12 +29,12 @@
   display: flex;
   align-items: center;
   gap: var(--s-3);
-  color: var(--c-muted);
+  color: var(--text-muted);
   font: 500 var(--step--2) / 1.4 var(--f-mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.hero-role::before { content: ''; flex: none; width: 24px; height: 1px; background: var(--c-signal); }
+.hero-role::before { content: ''; flex: none; width: 24px; height: 1px; background: var(--accent); }
 
 .hero-name { font-size: var(--step-6); font-weight: 500; line-height: 0.9; letter-spacing: -0.035em; }
 .mask-line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
@@ -45,11 +45,11 @@
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--s-5);
   padding-top: var(--s-5);
-  border-top: 1px solid var(--c-line);
+  border-top: 1px solid var(--border);
 }
 .hero-statement { grid-column: 1 / 6; font: 500 var(--step-2) / 1.12 var(--f-display); letter-spacing: -0.02em; }
 .hero-detail { grid-column: 7 / 13; display: grid; gap: var(--s-4); }
-.hero-lede { max-width: 54ch; color: var(--c-muted); }
+.hero-lede { max-width: 54ch; color: var(--text-muted); }
 .hero-caps {
   display: flex;
   flex-wrap: wrap;
@@ -60,7 +60,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.hero-caps li + li::before { content: '·'; padding: 0 10px; color: var(--c-signal); }
+.hero-caps li + li::before { content: '·'; padding: 0 10px; color: var(--accent-text); }
 
 .hero-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-5); }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-5); }
@@ -81,4 +81,38 @@
 @keyframes hero-rise { from { opacity: 0.06; transform: translateY(10px); } }
 @media (prefers-reduced-motion: reduce) {
   .hero-field, .mask-line > span, [data-reveal='hero'] { animation: none; }
+}
+
+/* Two CTAs, then the at-a-glance facts: availability, location, local time */
+.button-split { display: inline-flex; }
+.button-split .button:first-child { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.button-split .button + .button { margin-left: -1px; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.button-split .button:hover, .button-split .button:focus-visible { position: relative; z-index: 1; }
+.button-icon { width: 48px; padding: 0; }
+.button-icon:hover svg { transform: translateY(2px); }
+
+.hero-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-1);
+  background: var(--bg);
+}
+.hero-status > div { display: grid; align-content: center; gap: 2px; padding: var(--s-2) var(--s-4); }
+.hero-status > div + div { border-left: 1px solid var(--border); }
+.hero-status dt { color: var(--text-muted); font: 500 var(--step--2) / 1.4 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.hero-status dd { display: flex; align-items: center; gap: var(--s-2); margin: 0; font: 500 var(--step--1) / 1.4 var(--f-mono); }
+.hero-status-live dd { color: var(--text); text-transform: uppercase; letter-spacing: 0.06em; font-size: var(--step--2); }
+.local-time { display: inline-block; min-width: 5ch; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 860px) {
+  .hero-status { width: 100%; }
+  .hero-status > div { flex: 1 1 auto; }
+}
+@media (max-width: 420px) {
+  .hero-status-live { flex-basis: 100% !important; border-bottom: 1px solid var(--border); }
+  .hero-status > div + div { border-left: 0; }
+  .hero-status > div:last-child { border-left: 1px solid var(--border); }
 }

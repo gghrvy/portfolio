@@ -7,6 +7,9 @@ export type Project = {
   kicker: string
   name: string
   summary: string
+  role: string
+  problem: string
+  outcome: string
   stack: string[]
   tone: 'dark' | 'light'
   approach: { label: string; heading: string; body: string; facts: Fact[] }
@@ -28,6 +31,9 @@ export const projects: Project[] = [
     kicker: 'Sales intelligence / outbound workflow',
     name: 'Prospectos',
     summary: 'An AI-powered prospecting platform that discovers local businesses, audits their websites for verified opportunities, and manages controlled Gmail outreach.',
+    role: 'Full-stack developer · personal project',
+    problem: 'Outbound pitches are usually generic, and often recommend a feature the business already has.',
+    outcome: 'Evidence-backed drafts, sent only after Gmail approval',
     stack: ['Next.js', 'FastAPI', 'PostgreSQL', 'Playwright', 'Ollama', 'Gmail API', 'OpenStreetMap'],
     tone: 'dark',
     approach: {
@@ -57,6 +63,9 @@ export const projects: Project[] = [
     kicker: 'B2B SaaS / RAG platform',
     name: 'Day One',
     summary: 'A team knowledge platform designed to preserve context when engineers leave and new people need answers quickly.',
+    role: 'Full-stack developer · personal project',
+    problem: 'Institutional knowledge is lost when senior engineers leave teams.',
+    outcome: '8 core features shipped end to end',
     stack: ['Next.js', 'FastAPI', 'LangChain', 'Groq', 'Supabase', 'pgvector', 'React Flow'],
     tone: 'dark',
     approach: {
@@ -86,6 +95,9 @@ export const projects: Project[] = [
     kicker: 'Multi-tenant product',
     name: 'OneTap',
     summary: 'A community management platform for resident operations, issue reporting, facility reservations, and notification flows.',
+    role: 'Full-stack developer · personal project',
+    problem: 'Issue reports, reservations, and notices need one system that residents and staff share.',
+    outcome: 'Live on Railway with Resend email notifications',
     stack: ['Laravel', 'PHP', 'MySQL', 'Livewire', 'JavaScript', 'Railway'],
     tone: 'light',
     approach: {
@@ -113,6 +125,9 @@ export const projects: Project[] = [
 
 export const aria = {
   label: 'Aria / product concept',
+  role: 'Full-stack developer · personal project',
+  outcome: 'In development',
+  stack: ['Next.js', 'Three.js', 'Groq API', 'pgvector'],
   heading: 'Meet Aria.',
   title: 'A context-aware assistant for the work already in motion',
   body: 'Aria interprets a request, retrieves the context behind it, and returns the next useful response across projects, tasks, updates, and conversations.',

@@ -3,7 +3,9 @@ import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
 import localFont from 'next/font/local'
 import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google'
+import { BackToTop } from '@/components/BackToTop'
 import { MotionOrchestrator } from '@/components/MotionOrchestrator'
+import { Toaster } from '@/components/Toaster'
 import { siteUrl } from '@/lib/site-url'
 
 const display = localFont({ src: '../fonts/ClashGrotesk-Variable.woff2', weight: '200 700', variable: '--font-display', display: 'swap' })
@@ -12,15 +14,26 @@ const mono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variabl
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: 'Harvy Monte de Ramos | Full-Stack Software Engineer',
-  description: 'Full-stack software engineer building AI-powered products, backend systems, and workflow automation across sales, operations, and team knowledge.',
+  title: 'Harvy Monte de Ramos | Full-Stack & Frontend Developer',
+  description: 'Full-stack, frontend, and AI developer in Cebu, Philippines (UTC+8). Case studies in AI prospecting, RAG knowledge tools, and community platforms. Available for work.',
+  applicationName: 'Harvy Monte de Ramos',
+  authors: [{ name: 'Harvy Monte de Ramos', url: siteUrl }],
   alternates: { canonical: '/' },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
-  openGraph: { title: 'Harvy Monte de Ramos | Full-Stack Software Engineer', description: 'AI-powered products, backend systems, and workflow automation across sales, operations, and team knowledge.', url: '/', images: ['/og-image.jpg'], type: 'website' },
-  twitter: { card: 'summary_large_image', title: 'Harvy Monte de Ramos | Full-Stack Software Engineer', description: 'AI-powered products, backend systems, and workflow automation across sales, operations, and team knowledge.', images: ['/og-image.jpg'] },
+  openGraph: { title: 'Harvy Monte de Ramos | Full-Stack & Frontend Developer', description: 'AI-powered products, backend systems, and workflow automation. Based in Cebu, Philippines. Available for work.', url: '/', siteName: 'Harvy Monte de Ramos', locale: 'en_US', type: 'website' },
+  twitter: { card: 'summary_large_image', title: 'Harvy Monte de Ramos | Full-Stack & Frontend Developer', description: 'AI-powered products, backend systems, and workflow automation. Based in Cebu, Philippines. Available for work.' },
 }
 
-export const viewport: Viewport = { themeColor: '#0c0e0d', colorScheme: 'dark' }
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f3eee4' },
+    { media: '(prefers-color-scheme: dark)', color: '#0c0e0d' },
+  ],
+  colorScheme: 'dark light',
+}
+
+// Sets data-theme before first paint: stored manual choice, else the OS preference, else dark.
+const themeScript = "(function(){var d=document.documentElement,t=null;try{t=localStorage.getItem('theme')}catch(e){}var m=t==='light'||t==='dark';d.dataset.theme=m?t:(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');d.dataset.themeSource=m?'manual':'system'})()"
 
 // Opt into reveal states before first paint; fall back to static content if hydration never lands.
 const motionScript = "(function(){try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;var d=document.documentElement;d.classList.add('motion');setTimeout(function(){if(!window.__motionReady)d.classList.remove('motion')},4000)}catch(e){}})()"
@@ -35,12 +48,17 @@ const structuredData = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`} suppressHydrationWarning>
-      <body>
+    <html lang="en" data-theme="dark" className={`${display.variable} ${body.variable} ${mono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script dangerouslySetInnerHTML={{ __html: motionScript }} />
+      </head>
+      <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }} />
-        <a className="skip-link" href="#work">Skip to work</a>
+        <a className="skip-link" href="#main">Skip to content</a>
         <MotionOrchestrator>{children}</MotionOrchestrator>
+        <BackToTop />
+        <Toaster />
       </body>
     </html>
   )

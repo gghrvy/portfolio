@@ -1,0 +1,14 @@
+.not-found { display: flex; align-items: center; min-height: calc(100svh - var(--header-h)); padding-block: var(--s-9); }
+.nf-grid { display: grid; gap: var(--s-5); }
+.not-found h1 { max-width: 14ch; font-size: var(--step-5); }
+.nf-body { max-width: var(--measure); color: var(--text-muted); font-size: var(--step-1); line-height: 1.5; }
+.nf-actions { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+.button-primary:hover svg:first-child { transform: translateX(-3px); }
+.nf-graph { width: min(100%, 480px); margin-top: var(--s-6); }
+.nf-line { fill: none; stroke: var(--border-strong); stroke-width: 1.5; }
+.nf-line-hot { stroke: var(--accent); }
+.nf-line-broken { stroke: var(--accent); stroke-dasharray: 3 6; }
+.nf-node { fill: var(--bg); stroke: var(--accent-text); stroke-width: 1.5; }
+.nf-node-missing { stroke: var(--text-faint); stroke-dasharray: 2 3; }
+.motion .nf-line-hot { stroke-dasharray: 80; stroke-dashoffset: 80; animation: nf-draw var(--d-reveal) var(--ease-route) 200ms forwards; }
+@keyframes nf-draw { to { stroke-dashoffset: 0; } }

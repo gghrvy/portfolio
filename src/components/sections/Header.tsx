@@ -1,6 +1,7 @@
 import { ArrowUpRight } from 'lucide-react'
 import { MobileMenu } from '@/components/MobileMenu'
 import { Monogram } from '@/components/Monogram'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { contact } from '@/content/profile'
 
 export const navLinks = [
@@ -23,8 +24,11 @@ export function Header() {
             </a>
           ))}
         </nav>
-        <a className="header-resume" href={contact.resume} target="_blank" rel="noreferrer">Resume <ArrowUpRight size={14} aria-hidden="true" /></a>
-        <MobileMenu links={navLinks} />
+        <div className="header-actions">
+          <a className="header-resume" href={contact.resume} target="_blank" rel="noreferrer">Resume <ArrowUpRight size={14} aria-hidden="true" /><span className="visually-hidden"> (PDF, opens in a new tab)</span></a>
+          <ThemeToggle />
+          <MobileMenu links={navLinks} />
+        </div>
       </div>
     </header>
   )

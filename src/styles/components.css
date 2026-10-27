@@ -1,11 +1,11 @@
 /* Node label: [NN] / label */
 .node-label {
-  color: var(--c-muted);
+  color: var(--text-muted);
   font: 500 var(--step--2) / 1.4 var(--f-mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.node-label span { color: var(--c-signal); }
+.node-label span { color: var(--accent-text); }
 
 /* Buttons */
 .button {
@@ -15,7 +15,7 @@
   gap: var(--s-2);
   min-height: 48px;
   padding: 0 var(--s-5);
-  border: 1px solid var(--c-line-strong);
+  border: 1px solid var(--border-strong);
   border-radius: var(--r-1);
   background: transparent;
   font: 500 var(--step--1) / 1 var(--f-body);
@@ -34,22 +34,23 @@
 .button:active { transform: translateY(1px); }
 .button:disabled, .button[aria-disabled='true'] { opacity: 0.45; pointer-events: none; }
 
-.button-primary { border-color: var(--c-signal); background: var(--c-signal); color: var(--c-bg); }
-.button-primary:hover { border-color: var(--c-signal-hi); background: var(--c-signal-hi); }
-.button-ghost:hover { border-color: var(--c-signal); background: var(--c-panel-2); }
-.button-sm { min-height: 40px; padding: 0 var(--s-4); }
+.button-primary { border-color: var(--accent-fill); background: var(--accent-fill); color: var(--accent-contrast); }
+.button-primary:hover { border-color: var(--accent-fill-hover); background: var(--accent-fill-hover); }
+.button-ghost:hover { border-color: var(--accent-text); background: var(--surface-2); }
+.button-sm { min-height: var(--target); padding: 0 var(--s-4); }
 
 /* Links: resting hairline, amber underline draws from the left */
 .link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 28px;
-  color: var(--c-text);
+  min-height: var(--target);
+  color: var(--text);
   font: 500 var(--step--1) / 1.4 var(--f-body);
 }
-.link svg { flex: none; color: var(--c-signal); transition: transform var(--d-fast) var(--ease-signal); }
+.link svg { flex: none; color: var(--accent-text); transition: transform var(--d-fast) var(--ease-signal); }
 .link:hover svg { transform: translate(2px, -2px); }
+.link:active { transform: translateY(1px); }
 .link-text { position: relative; }
 .link-text::before, .link-text::after {
   content: '';
@@ -59,9 +60,9 @@
   left: 0;
   height: 1px;
 }
-.link-text::before { background: var(--c-line-strong); }
+.link-text::before { background: var(--border-strong); }
 .link-text::after {
-  background: var(--c-signal);
+  background: var(--accent-text);
   transform: scaleX(0);
   transform-origin: right;
   transition: transform var(--d-base) var(--ease-route);
@@ -72,9 +73,9 @@
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .chips li {
   padding: 5px 9px;
-  border: 1px solid var(--c-line);
+  border: 1px solid var(--border);
   border-radius: var(--r-1);
-  background: var(--c-panel-2);
+  background: var(--surface-2);
   font: 400 var(--step--2) / 1.3 var(--f-mono);
   letter-spacing: 0.02em;
 }
@@ -85,20 +86,20 @@
   align-items: center;
   gap: var(--s-3);
   padding: var(--s-2) var(--s-3);
-  border: 1px solid var(--c-line);
+  border: 1px solid var(--border);
   border-radius: var(--r-1);
-  color: var(--c-text);
+  color: var(--text);
   font: 500 var(--step--2) / 1.3 var(--f-mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.status-dot { position: relative; width: 8px; height: 8px; border-radius: var(--r-full); background: var(--c-live); }
+.status-dot { position: relative; width: 8px; height: 8px; border-radius: var(--r-full); background: var(--live); }
 .status-dot::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: var(--c-live);
+  background: var(--live);
   animation: status-pulse 2.4s var(--ease-signal) infinite;
 }
 @keyframes status-pulse {
@@ -109,3 +110,4 @@
 
 /* Shared section heading sizes */
 .section-title { font-size: var(--step-5); }
+.link-text > svg { display: inline-block; margin-right: 6px; vertical-align: -2px; }

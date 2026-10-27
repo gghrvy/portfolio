@@ -70,8 +70,14 @@ export default function PacketField() {
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const coarse = window.matchMedia('(pointer: coarse)').matches
-    const styles = getComputedStyle(document.documentElement)
-    const color = { line: styles.getPropertyValue('--c-line-strong').trim(), node: styles.getPropertyValue('--c-faint').trim(), signal: styles.getPropertyValue('--c-signal').trim() }
+    const color = { line: '', node: '', signal: '' }
+    const readColors = () => {
+      const styles = getComputedStyle(document.documentElement)
+      color.line = styles.getPropertyValue('--border-strong').trim()
+      color.node = styles.getPropertyValue('--text-faint').trim()
+      color.signal = styles.getPropertyValue('--accent').trim()
+    }
+    readColors()
     const staticLayer = document.createElement('canvas')
     const staticCtx = staticLayer.getContext('2d')
     const head: Point = { x: 0, y: 0 }
@@ -238,7 +244,9 @@ export default function PacketField() {
       pointer.active = event.pointerType === 'mouse' && pointer.y >= 0 && pointer.y <= rect.height
     }
     const onLeave = () => { pointer.active = false }
+    const onTheme = () => { readColors(); layout(); if (reduced || !frame) render(reduced || started ? 1 : 0) }
     document.addEventListener('visibilitychange', onVisibility)
+    window.addEventListener('themechange', onTheme)
     window.addEventListener('pointermove', onPointer, { passive: true })
     document.documentElement.addEventListener('pointerleave', onLeave)
 
@@ -248,6 +256,7 @@ export default function PacketField() {
       resize.disconnect()
       io.disconnect()
       document.removeEventListener('visibilitychange', onVisibility)
+      window.removeEventListener('themechange', onTheme)
       window.removeEventListener('pointermove', onPointer)
       document.documentElement.removeEventListener('pointerleave', onLeave)
     }

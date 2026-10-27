@@ -29,6 +29,15 @@ export default function InteractiveGallery({ id, shots, name }: GalleryProps) {
 
   useEffect(() => setMounted(true), [])
 
+  const onThumbKey = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    const step = event.key === 'ArrowRight' || event.key === 'ArrowDown' ? 1 : event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 0
+    if (!step) return
+    event.preventDefault()
+    const next = (active + step + shots.length) % shots.length
+    show(next)
+    event.currentTarget.querySelectorAll<HTMLButtonElement>('button')[next]?.focus()
+  }
+
   const show = (index: number) => {
     const next = (index + shots.length) % shots.length
     setDirection(next > active || (active === shots.length - 1 && next === 0) ? 1 : -1)
@@ -63,7 +72,7 @@ export default function InteractiveGallery({ id, shots, name }: GalleryProps) {
             <figcaption aria-live="polite"><span>{main.label}</span><p>{main.note}</p></figcaption>
           </figure>
 
-          <div className="gallery-thumbs" role="group" aria-label={`${name} screens`}>
+          <div className="gallery-thumbs" role="group" aria-label={`${name} screens. Use arrow keys to switch.`} onKeyDown={onThumbKey}>
             {shots.map((shot, index) => (
               <button key={shot.src} type="button" className="gallery-thumb plate" aria-pressed={index === active} aria-label={`Show ${shot.label}`} onClick={() => show(index)}>
                 <Image src={shot.src} alt="" width={shot.width} height={shot.height} sizes="(max-width: 900px) 33vw, 20vw" />

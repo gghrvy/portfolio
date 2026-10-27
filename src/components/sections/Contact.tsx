@@ -1,5 +1,6 @@
-import { ArrowUp, ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6'
+import { Colophon } from '@/components/Colophon'
 import { CopyEmail } from '@/components/CopyEmail'
 import { NodeLabel, TextLink } from '@/components/ui'
 import { availability, closing, contact } from '@/content/profile'
@@ -45,8 +46,11 @@ export function Footer() {
   return (
     <footer className="site-footer">
       <div className="wrap site-footer-inner">
-        <span>© {new Date().getFullYear()} Harvy H. Monte de Ramos</span>
-        <a className="link" href="#top"><span className="link-text">Back to top</span><ArrowUp size={14} aria-hidden="true" /></a>
+        <Colophon />
+        <div className="site-footer-bar">
+          <span>© {new Date().getFullYear()} Harvy H. Monte de Ramos</span>
+          <span>Built in Cebu, Philippines</span>
+        </div>
       </div>
     </footer>
   )

@@ -12,7 +12,7 @@ export default function Home() {
     <>
       <Header />
       <ScrollTrace />
-      <main>
+      <main id="main" tabIndex={-1}>
         <Hero />
         <Work />
         <About />

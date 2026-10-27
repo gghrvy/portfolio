@@ -9,15 +9,17 @@ export const contact = {
 
 export const hero = {
   name: ['Harvy Monte', 'de Ramos'],
-  role: 'Software engineer · Full-stack · AI & automation',
+  role: 'Full-stack · Frontend · AI developer',
   statement: 'I build software that solves real business problems.',
   lede: 'Full-stack applications, backend systems, and AI-powered automation — built to streamline workflows, reduce repetitive work, and turn ideas into working products.',
   capabilities: ['Full-stack products', 'APIs & backend', 'AI workflows', 'Automation'],
   location: 'Cebu, Philippines',
+  timezone: 'UTC+8',
+  timeZoneId: 'Asia/Manila',
 }
 
 export const availability = {
-  status: 'Open to opportunities',
+  status: 'Available for work',
   intro: 'Available for software engineering roles and select freelance product work.',
   items: [
     { title: 'Software engineering roles', detail: ['Full-stack', 'Frontend', 'Backend', 'AI / Automation'] },
