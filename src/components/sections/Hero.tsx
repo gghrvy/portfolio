@@ -18,7 +18,6 @@ export function Hero() {
           <p className="hero-statement" data-reveal="hero" style={order(0)}>{hero.statement}</p>
           <div className="hero-detail" data-reveal="hero" style={order(1)}>
             <p className="hero-lede">{hero.lede}</p>
-            <ul className="hero-caps" aria-label="Focus areas">{hero.capabilities.map((item) => <li key={item}>{item}</li>)}</ul>
           </div>
         </div>
         <div className="hero-foot" data-reveal="hero" style={order(2)}>

@@ -12,7 +12,6 @@ export const hero = {
   role: 'Full-stack · Frontend · AI developer',
   statement: 'I build software that solves real business problems.',
   lede: 'Full-stack applications, backend systems, and AI-powered automation — built to streamline workflows, reduce repetitive work, and turn ideas into working products.',
-  capabilities: ['Full-stack products', 'APIs & backend', 'AI workflows', 'Automation'],
   location: 'Cebu, Philippines',
   timezone: 'UTC+8',
   timeZoneId: 'Asia/Manila',

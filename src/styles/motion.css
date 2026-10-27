@@ -85,18 +85,5 @@ html.lenis, html.lenis body { height: auto; }
   .scroll-trace-packet, .scroll-trace-head { position: absolute; top: 0; left: -2px; width: 5px; height: 5px; background: var(--trace); opacity: 0; will-change: transform; }
   .scroll-trace-packet { box-shadow: 0 -10px 0 -1px var(--accent-dim), 0 0 8px var(--trace); transition: opacity var(--d-fast) linear; }
   .scroll-trace-head { left: -4px; width: 9px; height: 9px; margin-top: -4px; border: 1px solid var(--trace); background: var(--bg); opacity: 1; transform-origin: center; }
-  .scroll-trace-head::after { content: ''; position: absolute; inset: -1px; border: 1px solid var(--trace); opacity: 0; }
-  .scroll-trace-head[data-pulse='a']::after { animation: head-pulse-a var(--d-reveal) var(--ease-signal); }
-  .scroll-trace-head[data-pulse='b']::after { animation: head-pulse-b var(--d-reveal) var(--ease-signal); }
 }
-@keyframes head-pulse-a { from { opacity: 0.9; transform: scale(1); } to { opacity: 0; transform: scale(2.8); } }
-@keyframes head-pulse-b { from { opacity: 0.9; transform: scale(1); } to { opacity: 0; transform: scale(2.8); } }
 html:not(.motion) .scroll-trace-head { display: none; }
-
-/* Section arrival: the node label's index flares and a rule sweeps under it */
-.node-label { position: relative; display: inline-block; }
-.node-label::after { content: ''; position: absolute; right: 0; bottom: -6px; left: 0; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; opacity: 0; }
-.node-label[data-arriving='true']::after { animation: label-sweep 1100ms var(--ease-route) both; }
-.node-label[data-arriving='true'] span { animation: label-flare 1100ms var(--ease-signal) both; }
-@keyframes label-sweep { 0% { opacity: 1; transform: scaleX(0); } 45% { opacity: 1; transform: scaleX(1); } 100% { opacity: 0; transform: scaleX(1); } }
-@keyframes label-flare { 0%, 100% { opacity: 1; } 15% { opacity: 0.25; } 30% { opacity: 1; } 45% { opacity: 0.4; } 60% { opacity: 1; } }

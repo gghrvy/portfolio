@@ -271,7 +271,7 @@
 .work-index-meta { color: var(--text-muted); font: 400 var(--step--2) / 1.5 var(--f-mono); letter-spacing: 0.04em; text-transform: uppercase; }
 
 /* Case meta strip: role / outcome / core stack */
-.case-meta-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 var(--s-6); border-block: 1px solid var(--border); }
+.case-meta-strip { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0 0 var(--s-6); border-block: 1px solid var(--border); }
 .case-meta-strip div { display: grid; gap: 4px; padding: var(--s-3) var(--s-4) var(--s-3) 0; }
 .case-meta-strip div + div { padding-left: var(--s-4); border-left: 1px solid var(--border); }
 .case-meta-strip dt { color: var(--accent-text); font: 500 var(--step--2) / 1.4 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; }
@@ -307,11 +307,9 @@
   .case-meta-strip div + div { padding-left: 0; border-top: 1px solid var(--border); border-left: 0; }
 }
 
-/* Ambient pipeline: after the draw, one packet keeps looping through the steps; each step glows as it passes.
+/* Ambient pipeline: after the draw, one packet keeps looping along the rail.
    Hover or focus pauses the loop. Transform/opacity only; never runs without the motion class. */
 .pipeline { --cycle: 7s; }
-.pipeline-step::after { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--accent-dim); opacity: 0; pointer-events: none; }
-.pipeline-step { isolation: isolate; }
 .pipeline-lane { position: absolute; top: -4px; right: 0; left: 0; height: 9px; overflow: hidden; pointer-events: none; }
 .pipeline-runner { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 .pipeline-runner::before {
@@ -325,14 +323,8 @@
   box-shadow: 0 0 10px var(--accent), -14px 0 0 -2px var(--accent-dim);
 }
 .motion .pipeline[data-inview] .pipeline-runner { animation: pipeline-run var(--cycle) linear calc(var(--d-reveal) + 800ms) infinite both; }
-.motion .pipeline[data-inview] .pipeline-step::after {
-  animation: pipeline-glow var(--cycle) linear infinite both;
-  animation-delay: calc(var(--d-reveal) + 800ms + var(--cycle) * var(--i) / var(--n));
-}
-.pipeline:hover .pipeline-runner, .pipeline:hover .pipeline-step::after,
-.pipeline:focus-within .pipeline-runner, .pipeline:focus-within .pipeline-step::after { animation-play-state: paused; }
+.pipeline:hover .pipeline-runner, .pipeline:focus-within .pipeline-runner { animation-play-state: paused; }
 @keyframes pipeline-run { from { transform: translateX(0); } to { transform: translateX(calc(100% + 7px)); } }
-@keyframes pipeline-glow { 0% { opacity: 0; } 3% { opacity: 1; } 18% { opacity: 0.6; } 25%, 100% { opacity: 0; } }
 
 @media (max-width: 900px) {
   .pipeline-lane { top: 0; right: auto; bottom: 0; left: -4px; width: 9px; height: auto; }
@@ -411,7 +403,7 @@
 .hotspot:hover, .hotspot[aria-pressed='true'] { background: var(--accent); color: var(--bg); transform: scale(1.12); }
 .hotspot:active { transform: scale(0.96); }
 .hotspot:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
-.motion .gallery[data-inview] .hotspot::after { animation: hotspot-ping 1.6s var(--ease-signal) 3 both; animation-delay: calc(900ms + var(--i) * 140ms); }
+.motion .gallery[data-inview] .hotspot::after { animation: hotspot-ping 1.6s var(--ease-signal) 1 both; animation-delay: calc(900ms + var(--i) * 140ms); }
 @keyframes hotspot-ping { from { opacity: 0.9; transform: scale(1); } to { opacity: 0; transform: scale(2.2); } }
 
 .tour { display: grid; gap: 0; margin: var(--s-4) 0 0; padding: 0; border-top: 1px solid var(--border); list-style: none; }
@@ -478,3 +470,30 @@
 .aria-example[data-low='true'] li:nth-child(3) strong { color: var(--accent-text); }
 @keyframes aria-think { from { opacity: 0.25; } to { opacity: 1; } }
 @media (max-width: 900px) { .aria-example { grid-template-columns: minmax(0, 1fr); } }
+
+/* Tour list: always open on wide screens; collapsed behind a toggle on narrow ones */
+.tour-toggle { display: none; }
+@media (max-width: 900px) {
+  .tour-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    width: 100%;
+    min-height: var(--target);
+    margin-top: var(--s-3);
+    padding: 0;
+    border: 0;
+    border-top: 1px solid var(--border);
+    background: none;
+    color: var(--text);
+    font: 500 var(--step--2) / 1 var(--f-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .tour-toggle span { color: var(--text-muted); }
+  .tour-toggle::after { content: '+'; margin-left: auto; color: var(--accent-text); font-size: var(--step-0); }
+  .tour-toggle[aria-expanded='true']::after { content: '−'; }
+  .tour { margin-top: 0; }
+  .tour[data-collapsed='true'] { display: none; }
+}

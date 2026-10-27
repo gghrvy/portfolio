@@ -50,17 +50,6 @@
 .hero-statement { grid-column: 1 / 6; font: 500 var(--step-2) / 1.12 var(--f-display); letter-spacing: -0.02em; }
 .hero-detail { grid-column: 7 / 13; display: grid; gap: var(--s-4); }
 .hero-lede { max-width: 54ch; color: var(--text-muted); }
-.hero-caps {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font: 500 var(--step--2) / 1.6 var(--f-mono);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.hero-caps li + li::before { content: '·'; padding: 0 10px; color: var(--accent-text); }
 
 .hero-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-5); }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-5); }

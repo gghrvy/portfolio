@@ -55,11 +55,6 @@ function useHeaderBehaviour() {
       for (const entry of entries) {
         if (!entry.isIntersecting || entry.target === current) continue
         current = entry.target
-        const label = entry.target.querySelector<HTMLElement>('.node-label')
-        if (label && document.documentElement.classList.contains('motion')) {
-          label.dataset.arriving = 'true'
-          window.setTimeout(() => { delete label.dataset.arriving }, 1200)
-        }
         const hash = `#${entry.target.id}`
         for (const link of links) {
           if (link.getAttribute('href') === hash) link.setAttribute('aria-current', 'location')
@@ -78,7 +73,7 @@ function useHeaderBehaviour() {
   }, [])
 }
 
-// Packets travel down the filled part of the margin trace and pulse the head on arrival (wide screens only).
+// Packets travel down the filled part of the margin trace to its head (wide screens only).
 function useTracePackets() {
   useEffect(() => {
     const trace = document.querySelector<HTMLElement>('.scroll-trace')
@@ -102,7 +97,6 @@ function useTracePackets() {
         const p = state[i]
         p.y += p.speed * dt
         if (p.y >= reach) {
-          if (reach > 24 && head) head.dataset.pulse = head.dataset.pulse === 'a' ? 'b' : 'a'
           p.y = -40 - i * 60
         }
         packet.style.opacity = reach > 24 && p.y > 0 ? '1' : '0'

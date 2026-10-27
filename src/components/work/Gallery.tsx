@@ -24,6 +24,7 @@ export default function InteractiveGallery({ id, shots, name }: GalleryProps) {
   const [open, setOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [spot, setSpot] = useState<number | null>(null)
+  const [tourOpen, setTourOpen] = useState(false)
   const expandRef = useRef<HTMLButtonElement>(null)
   const main = shots[active]
   const ratio = `${shots[0].width} / ${shots[0].height}`
@@ -47,7 +48,11 @@ export default function InteractiveGallery({ id, shots, name }: GalleryProps) {
   }
 
   const hotspots = main.hotspots ?? []
-  const toggleSpot = (index: number) => setSpot((current) => (current === index ? null : index))
+  // On narrow screens the tour list is collapsed until asked for; tapping a marker opens it.
+  const toggleSpot = (index: number) => {
+    setTourOpen(true)
+    setSpot((current) => (current === index ? null : index))
+  }
 
   return (
     <LazyMotion features={loadFeatures} strict>
@@ -94,7 +99,12 @@ export default function InteractiveGallery({ id, shots, name }: GalleryProps) {
             </div>
             <figcaption aria-live="polite"><span>{main.label}</span><p>{main.note}</p></figcaption>
             {hotspots.length > 0 && (
-              <ol className="tour" id={`${id}-tour`} aria-label={`What to look at in ${main.label}`}>
+              <button type="button" className="tour-toggle" aria-expanded={tourOpen} aria-controls={`${id}-tour`} onClick={() => setTourOpen((value) => !value)}>
+                What to look at <span>({hotspots.length})</span>
+              </button>
+            )}
+            {hotspots.length > 0 && (
+              <ol className="tour" id={`${id}-tour`} data-collapsed={!tourOpen} aria-label={`What to look at in ${main.label}`}>
                 {hotspots.map((hotspot, index) => (
                   <li key={hotspot.title} data-active={spot === index}>
                     <button type="button" className="tour-item" aria-expanded={spot === index} onClick={() => toggleSpot(index)}>

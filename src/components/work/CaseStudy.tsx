@@ -38,7 +38,6 @@ export function CaseStudy({ project, flip, next }: { project: Project; flip: boo
         <dl className="case-meta-strip">
           <div><dt>My role</dt><dd>{project.role}</dd></div>
           <div><dt>Outcome</dt><dd>{project.outcome}</dd></div>
-          <div><dt>Core stack</dt><dd>{project.stack.slice(0, 3).join(' · ')}</dd></div>
         </dl>
 
         <Pipeline steps={project.flow} label={`${project.name} pipeline`} />
