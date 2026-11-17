@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Harvy Monte de Ramos · Portfolio
 
-## Getting Started
+**Live:** https://harvygg.vercel.app
 
-First, run the development server:
+My developer portfolio, built by hand with a focus on motion, 3D and a crafted feel instead of a template look.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Stack
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Area | Tools |
+|---|---|
+| Framework | Next.js 16 (App Router), React 19, TypeScript |
+| Styling | Tailwind CSS v4 |
+| Motion and 3D | GSAP, Framer Motion, Lenis smooth scroll, Three.js via React Three Fiber |
+| Data | Supabase |
+| Testing | Vitest + React Testing Library, Playwright |
+| Hosting | Vercel |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Run it locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy `.env.example` to `.env.local`, then run `npm install` and `npm run dev`. The site opens at http://localhost:3000.
 
-## Learn More
+## Tests
 
-To learn more about Next.js, take a look at the following resources:
+Unit tests: `npm test`. End-to-end tests: `npx playwright test`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contact
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+harvyh.montederamos@gmail.com · [LinkedIn](https://linkedin.com/in/harvy-montederamos) · [GitHub](https://github.com/gghrvy)
